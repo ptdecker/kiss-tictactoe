@@ -129,7 +129,11 @@ impl Game {
             return Ok(Turn { result, event: classify(self.status, false, false, quality) });
         }
 
-        // User threat is seen before the engine blocks it (D-04)
+        // User threat is seen before the engine blocks it (D-04).
+        // INVARIANT: the engine is perfect, so it always blocks (or wins
+        // over) an open X threat. If the engine ever becomes imperfect
+        // (TRAIN-01), re-check that the threat was actually blocked after
+        // the reply before reporting UserAboutToWin.
         let user_threat = has_threat(&self.board, Player::X);
 
         // Engine responds as O
