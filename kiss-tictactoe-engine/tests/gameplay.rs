@@ -1,4 +1,6 @@
-use kiss_tictactoe_engine::{Game, GameStatus, MoveError, MoveResult, Player, Position};
+use kiss_tictactoe_engine::{
+    Commentator, Game, GameStatus, MoveError, MoveResult, Player, Position, TalkEvent, Turn,
+};
 
 fn first_empty(game: &Game) -> Option<Position> {
     for row in 0..3u8 {
@@ -106,5 +108,95 @@ fn full_game_ends_and_rejects_further_moves() {
             let err = game.make_move(Position { row, col });
             assert_eq!(err, Err(MoveError::GameAlreadyOver));
         }
+    }
+}
+
+#[test]
+fn play_matches_make_move() {
+    let mut a = Game::new();
+    let mut b = Game::new();
+    while a.status() == GameStatus::InProgress {
+        let pos = first_empty(&a).expect("empty cell while in progress");
+        let r = a.make_move(pos).expect("legal move");
+        let turn: Turn = b.play(pos).expect("legal move");
+        assert_eq!(r, turn.result, "make_move and play must agree");
+        assert_eq!(a, b, "game state must match after each turn");
+    }
+}
+
+#[test]
+fn full_game_ends_with_lifecycle_event() {
+    let mut game = Game::new();
+    loop {
+        let pos = first_empty(&game).expect("empty cell while in progress");
+        let turn = game.play(pos).expect("legal move");
+        if let MoveResult::GameOver(s) = turn.result {
+            let expected = match s {
+                GameStatus::Win(Player::O) => TalkEvent::EngineWins,
+                GameStatus::Win(Player::X) => TalkEvent::UserWins,
+                GameStatus::Draw => TalkEvent::Draw,
+                GameStatus::InProgress => panic!("GameOver(InProgress)"),
+            };
+            assert_eq!(turn.event, Some(expected));
+            break;
+        }
+    }
+}
+
+#[test]
+fn non_final_turns_never_carry_lifecycle_events() {
+    let mut game = Game::new();
+    while game.status() == GameStatus::InProgress {
+        let pos = first_empty(&game).expect("empty cell while in progress");
+        let turn = game.play(pos).expect("legal move");
+        if turn.result == MoveResult::Continuing {
+            assert!(
+                !matches!(
+                    turn.event,
+                    Some(TalkEvent::GameStart)
+                        | Some(TalkEvent::EngineWins)
+                        | Some(TalkEvent::UserWins)
+                        | Some(TalkEvent::Draw)
+                ),
+                "lifecycle event on a non-final turn: {:?}",
+                turn.event
+            );
+        }
+    }
+}
+
+#[test]
+fn play_after_game_over_is_rejected() {
+    let mut game = Game::new();
+    while game.status() == GameStatus::InProgress {
+        let pos = first_empty(&game).expect("empty cell while in progress");
+        game.play(pos).expect("legal move");
+    }
+    for row in 0..3u8 {
+        for col in 0..3u8 {
+            assert_eq!(
+                game.play(Position { row, col }),
+                Err(MoveError::GameAlreadyOver)
+            );
+        }
+    }
+}
+
+#[test]
+fn commentator_lines_come_from_banks() {
+    for ev in TalkEvent::ALL {
+        let line = Commentator::new(42).line(ev);
+        assert!(!line.trim().is_empty(), "empty line for {ev:?}");
+        assert!(line.chars().count() <= 56, "line too long for {ev:?}: {line}");
+    }
+}
+
+#[test]
+fn commentator_same_seed_same_sequence() {
+    let mut a = Commentator::new(7);
+    let mut b = Commentator::new(7);
+    for i in 0..40 {
+        let ev = TalkEvent::ALL[i % TalkEvent::COUNT];
+        assert_eq!(a.line(ev), b.line(ev), "sequences diverged at call {i}");
     }
 }
