@@ -262,10 +262,10 @@ Shared new-game handler: define `let start_new_game = move |_| { game.set(Game::
 | A4 | Skip optional NewGameAbandoned category | Banks | Minor flavor loss |
 | A5 | `aria_live` attribute spelling in rsx | Pattern 5 | Compile error; fall back to string-literal attr |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Should `GoodMove` be suppressed on the first move?** Everything preserves a draw on move 1, so it always fires. Recommendation: allow it; D-03 permits.
-2. **Where does `Board` get `bubble`/`tally`/`commentator`?** Recommend App passes the signals as props (or a small `AppState` context via `provide_context`). Planner's choice; props are simplest and consistent with `Signal<Game>` now.
+1. **Should `GoodMove` be suppressed on the first move?** Everything preserves a draw on move 1, so it always fires. Recommendation: allow it; D-03 permits. RESOLVED: Plan 03-03 allows it (`first_move_is_good` expects `Some(GoodMove)`).
+2. **Where does `Board` get `bubble`/`tally`/`commentator`?** RESOLVED: Plan 03-02 — `App` owns the signals; `Board` takes `on_turn` and `on_new_game` handlers.
 
 ## Environment Availability
 
