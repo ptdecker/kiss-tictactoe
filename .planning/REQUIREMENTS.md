@@ -18,7 +18,7 @@
 ### UI
 
 - [ ] **UI-01**: User can click any empty cell to place their mark; occupied and invalid cells are non-interactive
-- [ ] **UI-02**: Engine speech bubble displays context-appropriate trash talk after each game event
+- [x] **UI-02**: Engine speech bubble displays context-appropriate trash talk after each game event
 - [ ] **UI-03**: Session scoreboard shows cumulative wins, losses, and draws for the current session
 - [ ] **UI-04**: User can start a new game (board resets; score persists)
 - [ ] **UI-05**: User can reset the session scoreboard independently of starting a new game
@@ -86,7 +86,7 @@
 | ENGI-05 | Phase 3 | Complete |
 | ENGI-06 | Phase 3 | Pending |
 | ENGI-07 | Phase 3 | Complete |
-| UI-02 | Phase 3 | Pending |
+| UI-02 | Phase 3 | Complete |
 | UI-03 | Phase 3 | Pending |
 | UI-04 | Phase 3 | Pending |
 | UI-05 | Phase 3 | Pending |
