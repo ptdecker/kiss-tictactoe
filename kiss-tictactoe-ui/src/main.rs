@@ -17,7 +17,7 @@ fn main() {
     // the board, so size it to fit the whole column on first launch.
     let window = WindowBuilder::new()
         .with_title("kiss-tictactoe")
-        .with_inner_size(LogicalSize::new(520.0, 840.0))
+        .with_inner_size(LogicalSize::new(440.0, 720.0))
         .with_min_inner_size(LogicalSize::new(320.0, 560.0));
     LaunchBuilder::desktop()
         .with_cfg(Config::new().with_window(window))
