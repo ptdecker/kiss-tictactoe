@@ -11,9 +11,9 @@
 - [ ] **ENGI-02**: Engine detects win (any row/column/diagonal) and draw (board full, no winner) after every move
 - [ ] **ENGI-03**: Engine exposes a clean public API usable from any UI or interface with zero Dioxus dependency
 - [ ] **ENGI-04**: Engine AI uses minimax and plays optimally (always draws against perfect play)
-- [ ] **ENGI-05**: Engine emits game-lifecycle trash talk events: game start, engine wins, user wins, draw result
+- [x] **ENGI-05**: Engine emits game-lifecycle trash talk events: game start, engine wins, user wins, draw result
 - [ ] **ENGI-06**: Engine emits tactical trash talk events: engine about to win, user about to win (two in a row), engine assesses a good move, engine assesses a bad move
-- [ ] **ENGI-07**: Message bank contains 4–8 strings per trash talk event category (~32–64 strings total), selected randomly per trigger
+- [x] **ENGI-07**: Message bank contains 4–8 strings per trash talk event category (~32–64 strings total), selected randomly per trigger
 
 ### UI
 
@@ -83,9 +83,9 @@
 | ENGI-04 | Phase 2 | Pending |
 | UI-01 | Phase 2 | Pending |
 | UI-06 | Phase 2 | Pending |
-| ENGI-05 | Phase 3 | Pending |
+| ENGI-05 | Phase 3 | Complete |
 | ENGI-06 | Phase 3 | Pending |
-| ENGI-07 | Phase 3 | Pending |
+| ENGI-07 | Phase 3 | Complete |
 | UI-02 | Phase 3 | Pending |
 | UI-03 | Phase 3 | Pending |
 | UI-04 | Phase 3 | Pending |

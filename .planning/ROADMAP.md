@@ -127,5 +127,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete   | 2026-10-14 |
 | 2. Playable Game | 3/3 | Complete   | 2026-10-14 |
-| 3. Personality | 0/TBD | Not started | - |
+| 3. Personality | 0/4 | Planned    |  |
 | 4. Documentation | 0/TBD | Not started | - |
