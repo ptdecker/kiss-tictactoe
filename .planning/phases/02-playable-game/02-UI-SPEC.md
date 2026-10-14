@@ -1,10 +1,11 @@
 ---
 phase: 2
 slug: playable-game
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-10-14
+reviewed_at: 2026-10-14T00:00:00Z
 ---
 
 # Phase 2 — UI Design Contract
@@ -166,7 +167,7 @@ Cell states (four, each has distinct CSS class):
 
 ## Layout
 
-From D-08, D-09: single centered column, flexbox, responsive.
+From D-08, D-09: single centered column, flexbox, responsive. Primary focal point: the 3×3 board grid is the dominant visual element; the title and "Play again" button are secondary anchors.
 
 ```
 body / #app-root:
@@ -302,11 +303,11 @@ No component registry. Plain CSS + Dioxus RSX only.
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS (FLAG: focal point sentence added per checker recommendation)
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved — 2026-10-14
