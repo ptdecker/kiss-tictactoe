@@ -50,8 +50,8 @@ pub fn Board(
                         content,
                         interactive,
                         on_click: move |p: Position| {
+                            // Rapid clicks can race the re-render; ignore expected errors.
                             let outcome = game.write().play(p);
-                            debug_assert!(outcome.is_ok(), "unexpected move error: {outcome:?}");
                             if let Ok(turn) = outcome {
                                 on_turn.call(turn);
                             }
