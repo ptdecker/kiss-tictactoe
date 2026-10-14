@@ -67,7 +67,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet.
+- [ ] Resolve Dependabot vulnerabilities (1 moderate, 1 low) flagged on main branch — check github.com/ptdecker/kiss-tictactoe/security/dependabot; likely transitive Cargo deps from Dioxus 0.7.10
 
 ### Blockers/Concerns
 
