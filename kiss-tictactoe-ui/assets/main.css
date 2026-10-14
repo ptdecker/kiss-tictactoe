@@ -2,10 +2,6 @@
     box-sizing: border-box;
 }
 
-body {
-    margin: 0;
-}
-
 /* ============================================================
    Design tokens — all values defined here; no magic numbers
    outside this block
@@ -41,12 +37,26 @@ body {
 
   /* Border radius */
   --radius-pill: 9999px;
+
+  /* Color — Phase 3 */
+  --color-bubble-bg: #FFFFFF;
+  --color-bubble-border: #1E293B;
+
+  /* Layout — Phase 3 */
+  --bubble-min-height: 80px;
+  --bubble-tail-size: 8px;
+  --bubble-border-width: 2px;
+  --radius-bubble: 16px;
+
+  /* Motion — Phase 3 */
+  --bubble-fade-duration: 5s;
 }
 
 /* ============================================================
    Global layout
    ============================================================ */
 body {
+    margin: 0;
     font-family: system-ui, -apple-system, sans-serif;
     background-color: var(--color-bg);
     color: var(--color-text);
@@ -187,4 +197,79 @@ body {
 
 .play-again-btn:hover {
     background-color: var(--color-overlay-text);
+}
+
+/* ============================================================
+   Speech bubble — engine trash talk between title and board
+   ============================================================ */
+.speech-bubble-region {
+    width: 100%;
+    min-height: var(--bubble-min-height);
+}
+
+.speech-bubble {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: var(--bubble-min-height);
+    padding: var(--space-md);
+    background-color: var(--color-bubble-bg);
+    border: var(--bubble-border-width) solid var(--color-bubble-border);
+    border-radius: var(--radius-bubble);
+    color: var(--color-text);
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Down-pointing tail: border-colored triangle with a bg-colored inset copy */
+.speech-bubble::before,
+.speech-bubble::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: var(--bubble-tail-size) solid transparent;
+    border-right: var(--bubble-tail-size) solid transparent;
+}
+
+.speech-bubble::before {
+    border-top: var(--bubble-tail-size) solid var(--color-bubble-border);
+}
+
+.speech-bubble::after {
+    top: calc(100% - var(--bubble-border-width));
+    border-top: var(--bubble-tail-size) solid var(--color-bubble-bg);
+}
+
+.speech-bubble-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+@keyframes bubble-fade {
+    0%, 80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.speech-bubble--fading {
+    animation: bubble-fade var(--bubble-fade-duration) linear forwards;
+}
+
+.speech-bubble--final {
+    animation: none;
+    opacity: 1;
+}
+
+.speech-bubble--empty {
+    visibility: hidden;
 }
