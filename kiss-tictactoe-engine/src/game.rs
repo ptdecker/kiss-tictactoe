@@ -1,8 +1,8 @@
 //! The `Game` struct: the primary entry point for the engine API.
 
-use crate::ai::best_engine_move;
+use crate::ai::{best_engine_move, move_quality};
 use crate::detection::detect_status;
-use crate::events::lifecycle_event;
+use crate::events::{classify, has_threat};
 use crate::types::{Board, GameStatus, MoveError, MoveResult, Player, Position, TalkEvent};
 
 /// One full turn: the human's move plus the engine's reply.
@@ -79,6 +79,9 @@ impl Game {
     /// Play one full turn (human move plus engine reply) and report the
     /// result together with at most one trash-talk event.
     ///
+    /// Event priority (D-03): game over, engine threat, user threat, bad
+    /// move, good move.
+    ///
     /// # Errors
     ///
     /// Returns an error (without mutating state) when:
@@ -112,6 +115,9 @@ impl Game {
             return Err(MoveError::CellOccupied);
         }
 
+        // Judge the move against the board BEFORE it is placed (D-02)
+        let quality = move_quality(&self.board, pos);
+
         // Place the human's X
         self.board[pos.row as usize][pos.col as usize] = Some(Player::X);
         self.history.push(pos);
@@ -120,8 +126,11 @@ impl Game {
         // Human's move ended the game
         if self.status != GameStatus::InProgress {
             let result = MoveResult::GameOver(self.status);
-            return Ok(Turn { result, event: lifecycle_event(self.status) });
+            return Ok(Turn { result, event: classify(self.status, false, false, quality) });
         }
+
+        // User threat is seen before the engine blocks it (D-04)
+        let user_threat = has_threat(&self.board, Player::X);
 
         // Engine responds as O
         self.current_player = Player::O;
@@ -148,7 +157,9 @@ impl Game {
         } else {
             MoveResult::Continuing
         };
-        Ok(Turn { result, event: lifecycle_event(self.status) })
+        let engine_threat =
+            self.status == GameStatus::InProgress && has_threat(&self.board, Player::O);
+        Ok(Turn { result, event: classify(self.status, engine_threat, user_threat, quality) })
     }
 
     /// The current game status.
