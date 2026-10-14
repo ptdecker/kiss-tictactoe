@@ -5,3 +5,186 @@
 body {
     margin: 0;
 }
+
+/* ============================================================
+   Design tokens — all values defined here; no magic numbers
+   outside this block
+   ============================================================ */
+:root {
+  /* Layout */
+  --board-max: 360px;
+  --cell-size: 112px;
+  --grid-gap: 4px;
+
+  /* Color */
+  --color-bg: #F9FAFB;
+  --color-grid: #1E293B;
+  --color-text: #1E293B;
+  --color-x: #2563EB;
+  --color-o: #E85D04;
+  --color-hover: rgba(37, 99, 235, 0.10);
+  --color-overlay-bg: rgba(30, 41, 59, 0.92);
+  --color-overlay-text: #FFFFFF;
+
+  /* Typography */
+  --font-size-body: 16px;
+  --font-size-heading: 24px;
+  --font-size-display: 40px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Border radius */
+  --radius-pill: 9999px;
+}
+
+/* ============================================================
+   Global layout
+   ============================================================ */
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: var(--space-md);
+}
+
+/* ============================================================
+   Game container — single centered column
+   ============================================================ */
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    width: 100%;
+    max-width: var(--board-max);
+}
+
+/* ============================================================
+   App title
+   ============================================================ */
+.app-title {
+    font-size: var(--font-size-heading);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+}
+
+/* ============================================================
+   Board wrapper — anchor for the game-over overlay (plan 02-03)
+   ============================================================ */
+.board-wrapper {
+    position: relative;
+    width: fit-content;
+}
+
+/* ============================================================
+   Board grid — CSS Grid gap technique: grid background reveals
+   as grid lines; no per-cell borders needed
+   ============================================================ */
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, var(--cell-size));
+    grid-template-rows: repeat(3, var(--cell-size));
+    gap: var(--grid-gap);
+    background-color: var(--color-grid);
+}
+
+/* ============================================================
+   Cell states
+   ============================================================ */
+.cell {
+    background-color: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-display);
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cell:hover {
+    background-color: var(--color-hover);
+}
+
+.cell--x {
+    color: var(--color-x);
+}
+
+.cell--o {
+    color: var(--color-o);
+}
+
+/* Occupied and frozen cells: no pointer interactions, no hover tint */
+.cell--x,
+.cell--o,
+.cell--frozen {
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ============================================================
+   Responsive: scale cells below 360px viewport (UI-06)
+   ============================================================ */
+@media (max-width: 360px) {
+    :root {
+        --cell-size: calc((100vw - 2 * var(--space-md) - 2 * var(--grid-gap)) / 3);
+    }
+}
+
+/* ============================================================
+   Game-over overlay — absolutely positioned over the board (D-05)
+   ============================================================ */
+.game-over-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-overlay-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xl);
+    border-radius: 0;
+}
+
+/* ============================================================
+   Outcome text inside the overlay (D-06)
+   ============================================================ */
+.outcome-text {
+    color: var(--color-overlay-text);
+    font-size: var(--font-size-display);
+    font-weight: 700;
+    line-height: 1.0;
+    text-align: center;
+}
+
+/* ============================================================
+   Play again button (D-07)
+   ============================================================ */
+.play-again-btn {
+    font-family: inherit;
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    line-height: 1.5;
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+}
+
+.play-again-btn:hover {
+    background-color: var(--color-overlay-text);
+}

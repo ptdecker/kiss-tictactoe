@@ -13,7 +13,7 @@ kiss-tictactoe is built in four vertical phases. Phase 1 establishes the Cargo w
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Cargo workspace, .gitignore, toolchain validation, GitHub repo and open-source artifacts (completed 2026-10-14)
-- [ ] **Phase 2: Playable Game** - Engine core (minimax, win/draw detection, clean API) + Dioxus UI wired together; a human can play a complete game
+- [x] **Phase 2: Playable Game** - Engine core (minimax, win/draw detection, clean API) + Dioxus UI wired together; a human can play a complete game (completed 2026-10-14)
 - [ ] **Phase 3: Personality** - Trash talk message bank, speech bubble, session scoreboard, New Game and Reset Scores controls
 - [ ] **Phase 4: Documentation** - mdBook user guide, mdBook engine technical manual, cargo doc
 
@@ -58,11 +58,11 @@ Plans:
 Plans:
 
 **Wave 1**
-- [ ] 02-01-PLAN.md — Clickable board wired to minimax engine: failing gameplay test, engine core (Game, detection, AI), Board/Cell UI + base CSS (ENGI-01, ENGI-02, ENGI-03, ENGI-04, UI-01)
+- [x] 02-01-PLAN.md — Clickable board wired to minimax engine: failing gameplay test, engine core (Game, detection, AI), Board/Cell UI + base CSS (ENGI-01, ENGI-02, ENGI-03, ENGI-04, UI-01)
 
 **Wave 2** *(blocked on Wave 1 completion; 02-02 and 02-03 run in parallel)*
-- [ ] 02-02-PLAN.md — Engine correctness proof: package legitimacy checkpoint, rstest detection suite, exhaustive never-loses + proptest invariants (ENGI-01, ENGI-02, ENGI-04)
-- [ ] 02-03-PLAN.md — Game-over overlay with Play again, 320px responsive CSS, purity gate, human play-through checkpoint (UI-01, UI-06, ENGI-02, ENGI-03)
+- [x] 02-02-PLAN.md — Engine correctness proof: package legitimacy checkpoint, rstest detection suite, exhaustive never-loses + proptest invariants (ENGI-01, ENGI-02, ENGI-04)
+- [x] 02-03-PLAN.md — Game-over overlay with Play again, 320px responsive CSS, purity gate, human play-through checkpoint (UI-01, UI-06, ENGI-02, ENGI-03)
 
 ### Phase 3: Personality
 **Goal**: The engine has a voice — context-aware trash talk appears in a speech bubble after game events, a session scoreboard tracks W/L/D across games, and the player has explicit New Game and Reset Scores controls.
@@ -91,6 +91,19 @@ Plans:
   4. `cargo doc --workspace --no-deps` completes without warnings; all public items in `kiss-tictactoe-engine` have doc comments
 **Plans**: TBD
 
+## Technical Debt
+
+Items surfaced by code review that are non-blocking but should be addressed in a future phase.
+
+| ID | File | Description | Severity | Source |
+|----|------|-------------|----------|--------|
+| TD-01 | `kiss-tictactoe-ui/src/components/board.rs:48` | Click handler silently discards `Result` from `game.write().make_move(p)` — add `debug_assert!(result.is_ok())` at minimum | Warning | 02-REVIEW WR-01 |
+| TD-02 | `kiss-tictactoe-engine/src/game.rs:158,163` | `default_equals_new` and `default_matches_new` are byte-for-byte duplicate tests; remove one or complete the intended second assertion | Warning | 02-REVIEW WR-02 |
+| TD-03 | `kiss-tictactoe-engine/src/ai.rs:197` | `let _ = g.make_move(...)` in `x_best_outcome` test helper discards result — failure causes infinite recursion instead of clean test failure | Warning | 02-REVIEW WR-03 |
+| TD-04 | `kiss-tictactoe-engine/src/ai.rs:230` | `let _ = game.make_move(pos)` in `perfect_play_draws` discards result inside a `while status == InProgress` loop — failure causes infinite loop (CI timeout) | Warning | 02-REVIEW WR-04 |
+| TD-05 | `kiss-tictactoe-ui/assets/main.css:5,49` | `body` block declared twice; merge the bare `margin: 0` reset at line 5 into the full layout rule at line 49 | Info | 02-REVIEW IN-01 |
+| TD-06 | `kiss-tictactoe-ui/src/components/board.rs:12` | `board_cells` is `pub` but only used internally; narrow to `pub(super)` or `pub(crate)` | Info | 02-REVIEW IN-02 |
+
 ## Progress
 
 **Execution Order:**
@@ -99,6 +112,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete   | 2026-10-14 |
-| 2. Playable Game | 0/3 | Planned | - |
+| 2. Playable Game | 3/3 | Complete   | 2026-10-14 |
 | 3. Personality | 0/TBD | Not started | - |
 | 4. Documentation | 0/TBD | Not started | - |
