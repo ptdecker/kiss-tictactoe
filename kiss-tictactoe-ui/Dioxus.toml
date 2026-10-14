@@ -1,0 +1,28 @@
+[application]
+name = "kiss-tictactoe-ui"
+default_platform = "desktop"
+out_dir = "dist"
+asset_dir = "assets"
+
+[web.app]
+title = "kiss-tictactoe"
+
+[web.watcher]
+reload_html = true
+watch_path = ["src", "assets"]
+
+[web.resource]
+
+[web.resource.dev]
+
+[desktop]
+
+[bundle]
+identifier = "com.ptdecker.kiss-tictactoe"
+publisher = "P. Todd Decker"
+icon = []
+resources = []
+copyright = ""
+category = "Game"
+short_description = ""
+long_description = ""
