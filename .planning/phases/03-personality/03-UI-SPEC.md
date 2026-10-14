@@ -1,7 +1,8 @@
 ---
 phase: 3
 slug: personality
-status: draft
+status: approved
+reviewed_at: 2026-10-14
 shadcn_initialized: false
 preset: none
 created: 2026-10-14
@@ -108,7 +109,7 @@ Bubble text is body size, weight 400, center-aligned, `line-height: 1.5`, clampe
 | Accent X / O | `--color-x` / `--color-o` | unchanged | Board marks only. NOT used in bubble, scoreboard or buttons |
 | Destructive | none | — | Reset Scores is quiet and immediate (D-16); it is not red |
 
-Accent reserved for (unchanged): X glyph and hover tint (`--color-x`), O glyph (`--color-o`).
+Accent reserved for: X glyph and hover tint (`--color-x`), O glyph (`--color-o`), and the keyboard focus ring (`--color-x`, the single stated exception). No destructive color is used: Reset Scores is intentionally quiet (D-16).
 
 ---
 
@@ -130,6 +131,7 @@ Focal point: the board remains dominant; the bubble is the secondary anchor and 
 .speech-bubble:
   position: relative
   width: 100%                         /* fills container, max 360px */
+  box-sizing: border-box               /* so the 2px borders do not add to the 80px */
   min-height: var(--bubble-min-height)  /* ALWAYS reserved, even when empty or faded */
   padding: var(--space-md)
   background-color: var(--color-bubble-bg)
@@ -166,7 +168,7 @@ Implementation notes for the planner:
 - The bubble box (border, background, tail) fades together with the text via the `opacity` on `.speech-bubble`; its reserved height remains, so the board never moves.
 - Empty/initial state before the first greeting: bubble rendered with `visibility: hidden` and the same min-height. In practice the game-start greeting (D-05) fires on launch, so the bubble is populated from first paint.
 - Final (game-over) message: class `speech-bubble--final`, stays at full opacity until New Game / Play again.
-- Message length: write bank strings at 64 characters or fewer so they fit two lines at 296px inner width (320px viewport: 288px inner). Longer text is clamped, never grows the box.
+- Message length: write bank strings at 56 characters or fewer so they fit two lines at 296px inner width (320px viewport: 288px inner). Longer text is clamped, never grows the box.
 - `prefers-reduced-motion: reduce`: keep the fade (opacity only, no movement); no additional handling required.
 
 Accessibility: `.speech-bubble` has `role="status"` and `aria-live="polite"` so new lines are announced; fading does not remove text from the DOM.
@@ -296,11 +298,11 @@ Timing: no spinners or delays; engine reply remains instant. The only animation 
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
 **Approval:** pending
