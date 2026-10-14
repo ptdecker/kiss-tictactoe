@@ -33,8 +33,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Cargo workspace, engine crate, Dioxus UI scaffold, engine purity verification
-- [ ] 01-02-PLAN.md — GitHub repository creation and community artifacts (LICENSE, CONTRIBUTING.md, CODE_OF_CONDUCT.md, issue templates, PR template)
+
+**Wave 1**
+- [ ] 01-01-PLAN.md — Cargo workspace, engine crate, Dioxus UI scaffold, engine purity verification (INFRA-01, INFRA-02, INFRA-03)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 01-02-PLAN.md — GitHub repository creation and community artifacts (INFRA-04, INFRA-05)
 
 ### Phase 2: Playable Game
 **Goal**: A human can sit down and play a complete tic-tac-toe game — clicking cells, watching the engine respond, and seeing a win, loss, or draw declared — all within a responsive Dioxus desktop UI.
@@ -85,7 +89,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Not started | - |
+| 1. Foundation | 0/2 | Planned | - |
 | 2. Playable Game | 0/TBD | Not started | - |
 | 3. Personality | 0/TBD | Not started | - |
 | 4. Documentation | 0/TBD | Not started | - |
