@@ -75,8 +75,20 @@ Plans:
   2. Tactical events (engine about to win, user about to win) also trigger distinct speech-bubble messages from their own per-category message banks
   3. The session scoreboard shows cumulative wins, losses, and draws that persist across games within the session
   4. The "New Game" button resets the board while the scoreboard remains unchanged; the "Reset Scores" button clears the scoreboard independently without affecting a game in progress
-**Plans**: TBD
+**Plans**: 4 plans
 **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+- [ ] 03-01-PLAN.md — Engine voice: failing end-to-end test, TalkEvent + Commentator (seeded xorshift, 8 banks), Game::play returning Turn with lifecycle events, TD-02 (ENGI-05, ENGI-07)
+
+**Wave 2** *(blocked on Wave 1 completion; 03-02 and 03-03 run in parallel)*
+- [ ] 03-02-PLAN.md — Speech bubble in the app: BubbleState, SpeechBubble, launch/Play again greeting, CSS-only fade, Board wired to play, TD-01/TD-05/TD-06 (UI-02, ENGI-05)
+- [ ] 03-03-PLAN.md — Tactical trash talk: threat detection, minimax move quality, D-03 priority classify in Game::play, TD-03/TD-04 (ENGI-06, ENGI-07)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+- [ ] 03-04-PLAN.md — Session scoreboard, New Game and Reset Scores controls, phase gate, human play-through checkpoint (UI-03, UI-04, UI-05, UI-02)
 
 ### Phase 4: Documentation
 **Goal**: The project ships complete user-facing and developer-facing documentation: an mdBook user guide explaining how to play and an mdBook engine technical manual covering the public API, data types, and event system.
