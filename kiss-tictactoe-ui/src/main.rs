@@ -2,6 +2,7 @@ mod components;
 mod state;
 
 use components::board::Board;
+use components::controls::Controls;
 use components::scoreboard::Scoreboard;
 use components::speech_bubble::SpeechBubble;
 use dioxus::prelude::*;
@@ -66,6 +67,10 @@ fn App() -> Element {
             }
             Board { game, on_turn: handle_turn, on_new_game: start_new_game }
             Scoreboard { wins: t.wins, draws: t.draws, losses: t.losses }
+            Controls {
+                on_new_game: start_new_game,
+                on_reset_scores: move |_| tally.set(Tally::default()),
+            }
         }
     }
 }

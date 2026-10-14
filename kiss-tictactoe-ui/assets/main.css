@@ -41,12 +41,21 @@
   /* Color — Phase 3 */
   --color-bubble-bg: #FFFFFF;
   --color-bubble-border: #1E293B;
+  --color-button-primary-bg: #1E293B;
+  --color-button-primary-text: #F9FAFB;
+  --color-button-secondary-border: #94A3B8;
+  --color-button-secondary-text: #475569;
+  --color-score-label: #475569;
 
   /* Layout — Phase 3 */
   --bubble-min-height: 80px;
   --bubble-tail-size: 8px;
   --bubble-border-width: 2px;
   --radius-bubble: 16px;
+  --button-min-height: 44px;
+  --button-border-width: 1px;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
 
   /* Motion — Phase 3 */
   --bubble-fade-duration: 5s;
@@ -272,4 +281,91 @@ body {
 
 .speech-bubble--empty {
     visibility: hidden;
+}
+
+/* ============================================================
+   Scoreboard — Wins / Draws / Losses, player perspective (D-17)
+   ============================================================ */
+.scoreboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    gap: var(--space-md);
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 0;
+    gap: var(--space-xs);
+}
+
+.score-count {
+    font-size: var(--font-size-heading);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-text);
+}
+
+.score-label {
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-score-label);
+}
+
+/* ============================================================
+   Controls — New Game and Reset Scores
+   ============================================================ */
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: 100%;
+}
+
+.btn {
+    font-family: inherit;
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    line-height: 1.5;
+    min-height: var(--button-min-height);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    flex: 1 1 0;
+    white-space: nowrap;
+}
+
+.btn--primary {
+    background: var(--color-button-primary-bg);
+    color: var(--color-button-primary-text);
+    border: var(--button-border-width) solid var(--color-button-primary-bg);
+}
+
+.btn--secondary {
+    background: transparent;
+    color: var(--color-button-secondary-text);
+    border: var(--button-border-width) solid var(--color-button-secondary-border);
+}
+
+.btn--primary:hover {
+    opacity: 0.9;
+}
+
+.btn--secondary:hover {
+    border-color: var(--color-text);
+    color: var(--color-text);
+}
+
+.btn:active {
+    opacity: 0.8;
+}
+
+.btn:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-x);
+    outline-offset: var(--focus-ring-offset);
 }
