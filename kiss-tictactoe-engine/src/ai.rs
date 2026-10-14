@@ -112,7 +112,8 @@ pub(crate) enum MoveQuality {
 /// `before` must be the board BEFORE the user's move is placed (Pitfall 3).
 /// Reuses the engine's [`minimax`] rather than a second evaluator (D-02).
 /// Outcomes are compared by `signum()` (win/draw/loss class), never by raw
-/// depth-adjusted scores (Pitfall 4).
+/// depth-adjusted scores (Pitfall 4), except within the losing class, where
+/// a faster loss than the best available is judged Bad.
 pub(crate) fn move_quality(before: &Board, pos: Position) -> MoveQuality {
     let score_of = |p: Position| {
         let mut b = *before;
@@ -125,7 +126,9 @@ pub(crate) fn move_quality(before: &Board, pos: Position) -> MoveQuality {
         .max()
         .unwrap_or(0);
     let chosen = score_of(pos);
-    if chosen.signum() < best.signum() {
+    // When every move loses, a move that loses sooner than the best
+    // available (depth-adjusted score) is still Bad.
+    if chosen.signum() < best.signum() || (best < 0 && chosen < best) {
         MoveQuality::Bad
     } else {
         MoveQuality::Good
@@ -163,6 +166,9 @@ mod tests {
     #[case(board_from(&[(0, 0), (2, 2)], &[(1, 0), (1, 1)]), Position { row: 1, col: 2 }, MoveQuality::Good)]
     #[case(board_from(&[(0, 0), (2, 2)], &[(1, 0), (1, 1)]), Position { row: 0, col: 2 }, MoveQuality::Bad)]
     #[case(board_from(&[(0, 0), (0, 1)], &[(1, 0), (1, 1)]), Position { row: 0, col: 2 }, MoveQuality::Good)]
+    // Doomed position: every move loses, but only (2,2) delays the loss.
+    #[case(board_from(&[(0, 0), (0, 1)], &[(0, 2), (1, 2)]), Position { row: 2, col: 2 }, MoveQuality::Good)]
+    #[case(board_from(&[(0, 0), (0, 1)], &[(0, 2), (1, 2)]), Position { row: 2, col: 0 }, MoveQuality::Bad)]
     fn move_quality_cases(
         #[case] before: Board,
         #[case] pos: Position,
