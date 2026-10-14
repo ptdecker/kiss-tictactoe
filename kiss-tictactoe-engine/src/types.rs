@@ -49,6 +49,53 @@ pub enum MoveResult {
     GameOver(GameStatus),
 }
 
+/// A category of trash talk the engine can deliver.
+///
+/// Lifecycle categories ([`TalkEvent::GameStart`], [`TalkEvent::EngineWins`],
+/// [`TalkEvent::UserWins`], [`TalkEvent::Draw`]) mark the start and end of a
+/// game (ENGI-05). The remaining four are tactical categories reacting to
+/// the board mid-game (ENGI-06). Pair an event with a
+/// [`crate::Commentator`] to get an actual line of text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum TalkEvent {
+    /// A new game is starting.
+    GameStart,
+    /// The engine won the game.
+    EngineWins,
+    /// The user won the game.
+    /// Unreachable against the perfect engine; reserved for the v2 training
+    /// mode (TRAIN-01).
+    // Unreachable against the perfect-minimax engine; exists as the hook for
+    // TRAIN-01 (D-01).
+    UserWins,
+    /// The game ended in a draw.
+    Draw,
+    /// The engine is about to win.
+    EngineAboutToWin,
+    /// The user is about to win.
+    UserAboutToWin,
+    /// The user made a good move.
+    GoodMove,
+    /// The user made a bad move.
+    BadMove,
+}
+
+impl TalkEvent {
+    /// Number of event categories.
+    pub const COUNT: usize = 8;
+    /// Every event category, in declaration order (index is `ev as usize`).
+    pub const ALL: [TalkEvent; 8] = [
+        TalkEvent::GameStart,
+        TalkEvent::EngineWins,
+        TalkEvent::UserWins,
+        TalkEvent::Draw,
+        TalkEvent::EngineAboutToWin,
+        TalkEvent::UserAboutToWin,
+        TalkEvent::GoodMove,
+        TalkEvent::BadMove,
+    ];
+}
+
 /// Reasons why a move was rejected.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MoveError {

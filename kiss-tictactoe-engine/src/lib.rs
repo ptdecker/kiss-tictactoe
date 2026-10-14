@@ -7,7 +7,7 @@
 //! automatically in the same call.
 //!
 //! ```
-//! use kiss_tictactoe_engine::{Game, GameStatus, MoveResult, Player, Position};
+//! use kiss_tictactoe_engine::{Game, GameStatus, MoveResult, Player, Position, TalkEvent};
 //!
 //! let mut game = Game::new();
 //! let result = game.make_move(Position { row: 1, col: 1 }).unwrap();
@@ -17,10 +17,12 @@
 #![warn(missing_docs)]
 
 mod ai;
+mod commentary;
 mod detection;
 mod game;
 mod types;
 
+pub use commentary::Commentator;
 pub use detection::detect_status;
 pub use game::Game;
-pub use types::{Board, GameStatus, MoveError, MoveResult, Player, Position};
+pub use types::{Board, GameStatus, MoveError, MoveResult, Player, Position, TalkEvent};
