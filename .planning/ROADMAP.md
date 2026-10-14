@@ -103,6 +103,8 @@ Items surfaced by code review that are non-blocking but should be addressed in a
 | TD-04 | `kiss-tictactoe-engine/src/ai.rs:230` | `let _ = game.make_move(pos)` in `perfect_play_draws` discards result inside a `while status == InProgress` loop — failure causes infinite loop (CI timeout) | Warning | 02-REVIEW WR-04 |
 | TD-05 | `kiss-tictactoe-ui/assets/main.css:5,49` | `body` block declared twice; merge the bare `margin: 0` reset at line 5 into the full layout rule at line 49 | Info | 02-REVIEW IN-01 |
 | TD-06 | `kiss-tictactoe-ui/src/components/board.rs:12` | `board_cells` is `pub` but only used internally; narrow to `pub(super)` or `pub(crate)` | Info | 02-REVIEW IN-02 |
+| TD-07 | `glib` (transitive via Dioxus desktop/wry) | Unsoundness in `VariantStrIter` iterator impls (GitHub Dependabot #1, moderate) — fix is upstream; bump Dioxus when a patched `glib` releases | Moderate | Dependabot #1 |
+| TD-08 | `rand` (transitive) | Unsound with custom logger using `rand::rng()` (GitHub Dependabot #2, low) — unexploitable without a custom logger; fix is upstream | Low | Dependabot #2 |
 
 ## Progress
 
