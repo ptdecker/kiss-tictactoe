@@ -98,6 +98,40 @@ pub(crate) fn best_engine_move(board: &Board) -> Option<Position> {
     best_pos
 }
 
+/// How good the user's move was, judged by the engine's own minimax (D-02).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum MoveQuality {
+    /// The move preserves the best outcome class X can still force.
+    Good,
+    /// The move drops to a worse outcome class than the best available.
+    Bad,
+}
+
+/// Judge the user's move `pos` (as X) on the board `before` the move.
+///
+/// `before` must be the board BEFORE the user's move is placed (Pitfall 3).
+/// Reuses the engine's [`minimax`] rather than a second evaluator (D-02).
+/// Outcomes are compared by `signum()` (win/draw/loss class), never by raw
+/// depth-adjusted scores (Pitfall 4).
+pub(crate) fn move_quality(before: &Board, pos: Position) -> MoveQuality {
+    let score_of = |p: Position| {
+        let mut b = *before;
+        b[p.row as usize][p.col as usize] = Some(Player::X);
+        minimax(&b, 0, false, i32::MIN, i32::MAX)
+    };
+    let best = empty_cells(before)
+        .into_iter()
+        .map(score_of)
+        .max()
+        .unwrap_or(0);
+    let chosen = score_of(pos);
+    if chosen.signum() < best.signum() {
+        MoveQuality::Bad
+    } else {
+        MoveQuality::Good
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -119,6 +153,22 @@ mod tests {
             board[r as usize][c as usize] = Some(Player::O);
         }
         board
+    }
+
+    // ── Move quality (D-02) ───────────────────────────────────────────────
+
+    #[rstest]
+    #[case(board_from(&[], &[]), Position { row: 1, col: 1 }, MoveQuality::Good)]
+    #[case(board_from(&[], &[]), Position { row: 0, col: 0 }, MoveQuality::Good)]
+    #[case(board_from(&[(0, 0), (2, 2)], &[(1, 0), (1, 1)]), Position { row: 1, col: 2 }, MoveQuality::Good)]
+    #[case(board_from(&[(0, 0), (2, 2)], &[(1, 0), (1, 1)]), Position { row: 0, col: 2 }, MoveQuality::Bad)]
+    #[case(board_from(&[(0, 0), (0, 1)], &[(1, 0), (1, 1)]), Position { row: 0, col: 2 }, MoveQuality::Good)]
+    fn move_quality_cases(
+        #[case] before: Board,
+        #[case] pos: Position,
+        #[case] expected: MoveQuality,
+    ) {
+        assert_eq!(move_quality(&before, pos), expected);
     }
 
     // ── Exhaustive never-loses proof ──────────────────────────────────────
@@ -193,7 +243,7 @@ mod tests {
             for col in 0..3u8 {
                 if board[row as usize][col as usize].is_none() {
                     let mut g = game.clone();
-                    let _ = g.make_move(Position { row, col });
+                    g.make_move(Position { row, col }).expect("legal move");
                     let score = x_best_outcome(&g);
                     if score > best {
                         best = score;
@@ -216,7 +266,7 @@ mod tests {
                 for col in 0..3u8 {
                     if board[row as usize][col as usize].is_none() {
                         let mut trial = game.clone();
-                        let _ = trial.make_move(Position { row, col });
+                        trial.make_move(Position { row, col }).expect("legal move");
                         let score = x_best_outcome(&trial);
                         if score > best_score {
                             best_score = score;
@@ -227,7 +277,7 @@ mod tests {
             }
             match best_move {
                 Some(pos) => {
-                    let _ = game.make_move(pos);
+                    game.make_move(pos).expect("legal move");
                 }
                 None => break,
             }
