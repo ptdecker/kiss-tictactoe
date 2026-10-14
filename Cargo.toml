@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "kiss-tictactoe-engine",
+    "kiss-tictactoe-ui",
+]
+resolver = "2"
