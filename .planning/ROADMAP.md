@@ -52,8 +52,17 @@ Plans:
   3. Win and draw states are detected correctly and the board becomes non-interactive immediately after game-over
   4. `cargo tree -p kiss-tictactoe-engine | grep dioxus` returns nothing after UI integration, confirming the engine purity boundary survives wiring
   5. The UI is usable at phone-width viewport (minimum 320px) using plain CSS; no layout breaks at narrow widths
-**Plans**: TBD
+**Plans**: 3 plans
 **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+- [ ] 02-01-PLAN.md — Clickable board wired to minimax engine: failing gameplay test, engine core (Game, detection, AI), Board/Cell UI + base CSS (ENGI-01, ENGI-02, ENGI-03, ENGI-04, UI-01)
+
+**Wave 2** *(blocked on Wave 1 completion; 02-02 and 02-03 run in parallel)*
+- [ ] 02-02-PLAN.md — Engine correctness proof: package legitimacy checkpoint, rstest detection suite, exhaustive never-loses + proptest invariants (ENGI-01, ENGI-02, ENGI-04)
+- [ ] 02-03-PLAN.md — Game-over overlay with Play again, 320px responsive CSS, purity gate, human play-through checkpoint (UI-01, UI-06, ENGI-02, ENGI-03)
 
 ### Phase 3: Personality
 **Goal**: The engine has a voice — context-aware trash talk appears in a speech bubble after game events, a session scoreboard tracks W/L/D across games, and the player has explicit New Game and Reset Scores controls.
@@ -90,6 +99,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete   | 2026-10-14 |
-| 2. Playable Game | 0/TBD | Not started | - |
+| 2. Playable Game | 0/3 | Planned | - |
 | 3. Personality | 0/TBD | Not started | - |
 | 4. Documentation | 0/TBD | Not started | - |
