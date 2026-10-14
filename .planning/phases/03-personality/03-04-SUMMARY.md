@@ -24,7 +24,7 @@ key-files:
 key-decisions:
   - "Tally increments only in handle_turn on MoveResult::GameOver; New Game never touches it (D-15)"
   - "Reset Scores sets Tally::default() with no confirmation and leaves game and bubble alone (D-16)"
-requirements-completed: [UI-03, UI-04, UI-05]
+requirements-completed: [UI-02, UI-03, UI-04, UI-05]
 duration: 10min
 completed: 2026-10-14
 ---
@@ -36,13 +36,13 @@ Session Wins/Draws/Losses tally owned by the UI, recorded once per finished game
 ## Tasks
 1. Session tally and Scoreboard: acf3911
 2. Controls, styles, phase gate: 6972edd
-3. Human play-through (checkpoint:human-verify): PENDING, awaiting user approval. UI-02 end-to-end confirmation depends on it.
+3. Human play-through (checkpoint:human-verify): APPROVED by user 2026-10-14. Window-size feedback addressed in 9468076 and cc952a4.
 
 ## Verification
 cargo test --workspace and cargo build --workspace pass; engine tree has no dioxus and zero normal dependencies; no hex literals outside :root, no overflow-x, no dangerous_inner_html.
 
 ## Deviations from Plan
-None - plan executed exactly as written.
+[Rule 1 - Checkpoint feedback] Default desktop window hid the scoreboard/controls; added an explicit initial window size (440x720, min 320x560) in kiss-tictactoe-ui/src/main.rs (9468076, cc952a4).
 
 ## Known Stubs
 None.

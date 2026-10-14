@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Cargo workspace, .gitignore, toolchain validation, GitHub repo and open-source artifacts (completed 2026-10-14)
 - [x] **Phase 2: Playable Game** - Engine core (minimax, win/draw detection, clean API) + Dioxus UI wired together; a human can play a complete game (completed 2026-10-14)
-- [ ] **Phase 3: Personality** - Trash talk message bank, speech bubble, session scoreboard, New Game and Reset Scores controls
+- [x] **Phase 3: Personality** - Trash talk message bank, speech bubble, session scoreboard, New Game and Reset Scores controls (completed 2026-10-14)
 - [ ] **Phase 4: Documentation** - mdBook user guide, mdBook engine technical manual, cargo doc
 
 ## Phase Details
@@ -88,7 +88,7 @@ Plans:
 - [x] 03-03-PLAN.md — Tactical trash talk: threat detection, minimax move quality, D-03 priority classify in Game::play, TD-03/TD-04 (ENGI-06, ENGI-07)
 
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 03-04-PLAN.md — Session scoreboard, New Game and Reset Scores controls, phase gate, human play-through checkpoint (UI-03, UI-04, UI-05, UI-02)
+- [x] 03-04-PLAN.md — Session scoreboard, New Game and Reset Scores controls, phase gate, human play-through checkpoint (UI-03, UI-04, UI-05, UI-02)
 
 ### Phase 4: Documentation
 **Goal**: The project ships complete user-facing and developer-facing documentation: an mdBook user guide explaining how to play and an mdBook engine technical manual covering the public API, data types, and event system.
@@ -127,5 +127,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete   | 2026-10-14 |
 | 2. Playable Game | 3/3 | Complete   | 2026-10-14 |
-| 3. Personality | 3/4 | In Progress|  |
+| 3. Personality | 4/4 | Complete   | 2026-10-14 |
 | 4. Documentation | 0/TBD | Not started | - |
