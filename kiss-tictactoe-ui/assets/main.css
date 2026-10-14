@@ -208,6 +208,12 @@ body {
     background-color: var(--color-overlay-text);
 }
 
+/* White ring: the button sits on the dark overlay, where the blue ring is faint */
+.play-again-btn:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-overlay-text);
+    outline-offset: var(--focus-ring-offset);
+}
+
 /* ============================================================
    Speech bubble — engine trash talk between title and board
    ============================================================ */

@@ -18,7 +18,7 @@ fn main() {
     let window = WindowBuilder::new()
         .with_title("kiss-tictactoe")
         .with_inner_size(LogicalSize::new(440.0, 720.0))
-        .with_min_inner_size(LogicalSize::new(320.0, 560.0));
+        .with_min_inner_size(LogicalSize::new(320.0, 700.0));
     LaunchBuilder::desktop()
         .with_cfg(Config::new().with_window(window))
         .launch(App);
