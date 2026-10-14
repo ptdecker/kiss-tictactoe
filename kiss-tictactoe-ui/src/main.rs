@@ -1,4 +1,5 @@
 mod components;
+mod state;
 
 use components::board::Board;
 use dioxus::prelude::*;
