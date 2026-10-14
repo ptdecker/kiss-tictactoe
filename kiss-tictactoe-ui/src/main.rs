@@ -5,6 +5,7 @@ use components::board::Board;
 use components::controls::Controls;
 use components::scoreboard::Scoreboard;
 use components::speech_bubble::SpeechBubble;
+use dioxus::desktop::{Config, LogicalSize, WindowBuilder};
 use dioxus::prelude::*;
 use kiss_tictactoe_engine::{Game, MoveResult, TalkEvent, Turn};
 use state::{Tally, opening};
@@ -12,7 +13,15 @@ use state::{Tally, opening};
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 
 fn main() {
-    dioxus::launch(App);
+    // The default window is too short to show the scoreboard and controls below
+    // the board, so size it to fit the whole column on first launch.
+    let window = WindowBuilder::new()
+        .with_title("kiss-tictactoe")
+        .with_inner_size(LogicalSize::new(520.0, 840.0))
+        .with_min_inner_size(LogicalSize::new(320.0, 560.0));
+    LaunchBuilder::desktop()
+        .with_cfg(Config::new().with_window(window))
+        .launch(App);
 }
 
 /// Seeds the commentator from the system clock.
