@@ -170,9 +170,10 @@ mod tests {
 
     #[test]
     fn reset_is_default() {
-        let mut t = Tally { wins: 4, draws: 5, losses: 6 };
-        t = Tally::default();
-        assert_eq!(t, Tally { wins: 0, draws: 0, losses: 0 });
+        // Reset Scores sets the tally to `Tally::default()`.
+        let before = Tally { wins: 4, draws: 5, losses: 6 };
+        assert_ne!(before, Tally::default());
+        assert_eq!(Tally::default(), Tally { wins: 0, draws: 0, losses: 0 });
     }
 
     #[test]
