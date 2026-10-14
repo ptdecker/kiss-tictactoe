@@ -85,7 +85,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion; 03-02 and 03-03 run in parallel)*
 - [x] 03-02-PLAN.md — Speech bubble in the app: BubbleState, SpeechBubble, launch/Play again greeting, CSS-only fade, Board wired to play, TD-01/TD-05/TD-06 (UI-02, ENGI-05)
-- [ ] 03-03-PLAN.md — Tactical trash talk: threat detection, minimax move quality, D-03 priority classify in Game::play, TD-03/TD-04 (ENGI-06, ENGI-07)
+- [x] 03-03-PLAN.md — Tactical trash talk: threat detection, minimax move quality, D-03 priority classify in Game::play, TD-03/TD-04 (ENGI-06, ENGI-07)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 - [ ] 03-04-PLAN.md — Session scoreboard, New Game and Reset Scores controls, phase gate, human play-through checkpoint (UI-03, UI-04, UI-05, UI-02)
@@ -127,5 +127,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete   | 2026-10-14 |
 | 2. Playable Game | 3/3 | Complete   | 2026-10-14 |
-| 3. Personality | 2/4 | In Progress|  |
+| 3. Personality | 3/4 | In Progress|  |
 | 4. Documentation | 0/TBD | Not started | - |
