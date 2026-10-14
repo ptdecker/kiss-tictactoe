@@ -350,7 +350,11 @@ mod tests {
             Position { row: 2, col: 2 },
         ];
         let is_corner = result.map(|p| corners.contains(&p)).unwrap_or(false);
-        assert!(is_corner, "Engine should answer center with a corner, got {:?}", result);
+        assert!(
+            is_corner,
+            "Engine should answer center with a corner, got {:?}",
+            result
+        );
     }
 
     /// Full board → no move available.

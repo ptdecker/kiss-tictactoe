@@ -116,8 +116,8 @@ mod tests {
 
     #[test]
     fn after_turn_with_line_game_over() {
-        let s = BubbleState::default()
-            .after_turn(MoveResult::GameOver(GameStatus::Draw), Some("x"));
+        let s =
+            BubbleState::default().after_turn(MoveResult::GameOver(GameStatus::Draw), Some("x"));
         assert!(s.is_final);
         assert_eq!(s.serial, 1);
     }
@@ -140,20 +140,48 @@ mod tests {
 
     #[test]
     fn tally_default_is_zero() {
-        assert_eq!(Tally::default(), Tally { wins: 0, draws: 0, losses: 0 });
+        assert_eq!(
+            Tally::default(),
+            Tally {
+                wins: 0,
+                draws: 0,
+                losses: 0
+            }
+        );
     }
 
     #[test]
     fn tally_records_each_outcome() {
         let mut t = Tally::default();
         t.record(GameStatus::Win(Player::X));
-        assert_eq!(t, Tally { wins: 1, draws: 0, losses: 0 });
+        assert_eq!(
+            t,
+            Tally {
+                wins: 1,
+                draws: 0,
+                losses: 0
+            }
+        );
         let mut t = Tally::default();
         t.record(GameStatus::Win(Player::O));
-        assert_eq!(t, Tally { wins: 0, draws: 0, losses: 1 });
+        assert_eq!(
+            t,
+            Tally {
+                wins: 0,
+                draws: 0,
+                losses: 1
+            }
+        );
         let mut t = Tally::default();
         t.record(GameStatus::Draw);
-        assert_eq!(t, Tally { wins: 0, draws: 1, losses: 0 });
+        assert_eq!(
+            t,
+            Tally {
+                wins: 0,
+                draws: 1,
+                losses: 0
+            }
+        );
         let mut t = Tally::default();
         t.record(GameStatus::InProgress);
         assert_eq!(t, Tally::default());
@@ -165,26 +193,52 @@ mod tests {
         t.record(GameStatus::Draw);
         t.record(GameStatus::Win(Player::O));
         t.record(GameStatus::Win(Player::O));
-        assert_eq!(t, Tally { wins: 0, draws: 1, losses: 2 });
+        assert_eq!(
+            t,
+            Tally {
+                wins: 0,
+                draws: 1,
+                losses: 2
+            }
+        );
     }
 
     #[test]
     fn reset_is_default() {
         // Reset Scores sets the tally to `Tally::default()`.
-        let before = Tally { wins: 4, draws: 5, losses: 6 };
+        let before = Tally {
+            wins: 4,
+            draws: 5,
+            losses: 6,
+        };
         assert_ne!(before, Tally::default());
-        assert_eq!(Tally::default(), Tally { wins: 0, draws: 0, losses: 0 });
+        assert_eq!(
+            Tally::default(),
+            Tally {
+                wins: 0,
+                draws: 0,
+                losses: 0
+            }
+        );
     }
 
     #[test]
     fn score_items_order() {
-        let t = Tally { wins: 3, draws: 2, losses: 1 };
+        let t = Tally {
+            wins: 3,
+            draws: 2,
+            losses: 1,
+        };
         assert_eq!(t.score_items(), [("Wins", 3), ("Draws", 2), ("Losses", 1)]);
     }
 
     #[test]
     fn tally_saturates() {
-        let mut t = Tally { wins: u32::MAX, draws: 0, losses: 0 };
+        let mut t = Tally {
+            wins: u32::MAX,
+            draws: 0,
+            losses: 0,
+        };
         t.record(GameStatus::Win(Player::X));
         assert_eq!(t.wins, u32::MAX);
     }

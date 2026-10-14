@@ -36,7 +36,9 @@ pub fn detect_status(board: &Board) -> GameStatus {
         }
     }
 
-    let full = board.iter().all(|row| row.iter().all(|cell| cell.is_some()));
+    let full = board
+        .iter()
+        .all(|row| row.iter().all(|cell| cell.is_some()));
     if full {
         GameStatus::Draw
     } else {

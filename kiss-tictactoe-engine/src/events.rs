@@ -95,23 +95,77 @@ mod tests {
     fn no_threat_cases() {
         assert!(!has_threat(&board_from(&[], &[]), Player::X));
         // Third cell blocked by the opponent.
-        assert!(!has_threat(&board_from(&[(0, 0), (0, 1)], &[(0, 2)]), Player::X));
+        assert!(!has_threat(
+            &board_from(&[(0, 0), (0, 1)], &[(0, 2)]),
+            Player::X
+        ));
         // Two-mark line belongs to the other player.
         assert!(!has_threat(&board_from(&[(0, 0), (0, 1)], &[]), Player::O));
         // Completed line with no open third cell.
-        assert!(!has_threat(&board_from(&[(0, 0), (0, 1), (0, 2)], &[]), Player::X));
+        assert!(!has_threat(
+            &board_from(&[(0, 0), (0, 1), (0, 2)], &[]),
+            Player::X
+        ));
     }
 
     #[rstest]
-    #[case(GameStatus::Win(Player::O), true, true, MoveQuality::Bad, Some(TalkEvent::EngineWins))]
-    #[case(GameStatus::Win(Player::X), true, true, MoveQuality::Bad, Some(TalkEvent::UserWins))]
+    #[case(
+        GameStatus::Win(Player::O),
+        true,
+        true,
+        MoveQuality::Bad,
+        Some(TalkEvent::EngineWins)
+    )]
+    #[case(
+        GameStatus::Win(Player::X),
+        true,
+        true,
+        MoveQuality::Bad,
+        Some(TalkEvent::UserWins)
+    )]
     #[case(GameStatus::Draw, true, true, MoveQuality::Bad, Some(TalkEvent::Draw))]
-    #[case(GameStatus::InProgress, true, true, MoveQuality::Bad, Some(TalkEvent::BadMove))]
-    #[case(GameStatus::InProgress, false, true, MoveQuality::Bad, Some(TalkEvent::BadMove))]
-    #[case(GameStatus::InProgress, true, true, MoveQuality::Good, Some(TalkEvent::EngineAboutToWin))]
-    #[case(GameStatus::InProgress, false, true, MoveQuality::Good, Some(TalkEvent::UserAboutToWin))]
-    #[case(GameStatus::InProgress, false, false, MoveQuality::Bad, Some(TalkEvent::BadMove))]
-    #[case(GameStatus::InProgress, false, false, MoveQuality::Good, Some(TalkEvent::GoodMove))]
+    #[case(
+        GameStatus::InProgress,
+        true,
+        true,
+        MoveQuality::Bad,
+        Some(TalkEvent::BadMove)
+    )]
+    #[case(
+        GameStatus::InProgress,
+        false,
+        true,
+        MoveQuality::Bad,
+        Some(TalkEvent::BadMove)
+    )]
+    #[case(
+        GameStatus::InProgress,
+        true,
+        true,
+        MoveQuality::Good,
+        Some(TalkEvent::EngineAboutToWin)
+    )]
+    #[case(
+        GameStatus::InProgress,
+        false,
+        true,
+        MoveQuality::Good,
+        Some(TalkEvent::UserAboutToWin)
+    )]
+    #[case(
+        GameStatus::InProgress,
+        false,
+        false,
+        MoveQuality::Bad,
+        Some(TalkEvent::BadMove)
+    )]
+    #[case(
+        GameStatus::InProgress,
+        false,
+        false,
+        MoveQuality::Good,
+        Some(TalkEvent::GoodMove)
+    )]
     fn classify_priority(
         #[case] status: GameStatus,
         #[case] engine_threat: bool,
@@ -119,6 +173,9 @@ mod tests {
         #[case] quality: MoveQuality,
         #[case] expected: Option<TalkEvent>,
     ) {
-        assert_eq!(classify(status, engine_threat, user_threat, quality), expected);
+        assert_eq!(
+            classify(status, engine_threat, user_threat, quality),
+            expected
+        );
     }
 }

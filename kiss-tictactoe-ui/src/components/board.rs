@@ -112,24 +112,17 @@ mod tests {
                 assert!(
                     !interactive,
                     "Occupied cell at ({},{}) should not be interactive",
-                    pos.row,
-                    pos.col
+                    pos.row, pos.col
                 );
             }
         }
 
         // Verify X cell is marked
-        let x_cells: Vec<_> = cells
-            .iter()
-            .filter(|(_, c, _)| *c == Some(X))
-            .collect();
+        let x_cells: Vec<_> = cells.iter().filter(|(_, c, _)| *c == Some(X)).collect();
         assert_eq!(x_cells.len(), 1, "Exactly one X cell");
 
         // Verify O cell is marked
-        let o_cells: Vec<_> = cells
-            .iter()
-            .filter(|(_, c, _)| *c == Some(O))
-            .collect();
+        let o_cells: Vec<_> = cells.iter().filter(|(_, c, _)| *c == Some(O)).collect();
         assert_eq!(o_cells.len(), 1, "Exactly one O cell");
     }
 
@@ -162,8 +155,7 @@ mod tests {
             assert!(
                 !interactive,
                 "All cells should be frozen after game over, but ({},{}) is interactive",
-                pos.row,
-                pos.col
+                pos.row, pos.col
             );
         }
     }

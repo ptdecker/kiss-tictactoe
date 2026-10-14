@@ -187,7 +187,10 @@ fn commentator_lines_come_from_banks() {
     for ev in TalkEvent::ALL {
         let line = Commentator::new(42).line(ev);
         assert!(!line.trim().is_empty(), "empty line for {ev:?}");
-        assert!(line.chars().count() <= 56, "line too long for {ev:?}: {line}");
+        assert!(
+            line.chars().count() <= 56,
+            "line too long for {ev:?}: {line}"
+        );
     }
 }
 
@@ -209,24 +212,43 @@ fn pos(row: u8, col: u8) -> Position {
 fn user_threat_reported_before_engine_blocks() {
     let mut game = Game::new();
     game.play(pos(1, 1)).expect("legal move");
-    assert_eq!(game.board()[0][0], Some(Player::O), "engine should reply in the corner (0,0)");
+    assert_eq!(
+        game.board()[0][0],
+        Some(Player::O),
+        "engine should reply in the corner (0,0)"
+    );
     let turn = game.play(pos(0, 1)).expect("legal move");
     assert_eq!(
         turn,
-        Turn { result: MoveResult::Continuing, event: Some(TalkEvent::UserAboutToWin) }
+        Turn {
+            result: MoveResult::Continuing,
+            event: Some(TalkEvent::UserAboutToWin)
+        }
     );
-    assert_eq!(game.board()[2][1], Some(Player::O), "engine must block at (2,1)");
+    assert_eq!(
+        game.board()[2][1],
+        Some(Player::O),
+        "engine must block at (2,1)"
+    );
 }
 
 #[test]
 fn engine_threat_reported_after_reply() {
     let mut game = Game::new();
     game.play(pos(1, 1)).expect("legal move");
-    assert_eq!(game.board()[0][0], Some(Player::O), "engine should reply in the corner (0,0)");
+    assert_eq!(
+        game.board()[0][0],
+        Some(Player::O),
+        "engine should reply in the corner (0,0)"
+    );
     let turn = game.play(pos(2, 2)).expect("legal move");
     assert_eq!(turn.result, MoveResult::Continuing);
     assert_eq!(turn.event, Some(TalkEvent::EngineAboutToWin));
-    assert_eq!(game.board()[0][2], Some(Player::O), "engine should reply at (0,2)");
+    assert_eq!(
+        game.board()[0][2],
+        Some(Player::O),
+        "engine should reply at (0,2)"
+    );
 }
 
 #[test]
@@ -241,9 +263,16 @@ fn blunder_into_loss_reports_engine_wins() {
     let mut game = Game::new();
     game.play(pos(1, 1)).expect("legal move");
     game.play(pos(2, 2)).expect("legal move");
-    assert_eq!(game.board()[0][2], Some(Player::O), "engine should hold (0,0) and (0,2)");
+    assert_eq!(
+        game.board()[0][2],
+        Some(Player::O),
+        "engine should hold (0,0) and (0,2)"
+    );
     let turn = game.play(pos(1, 0)).expect("legal move");
-    assert_eq!(turn.result, MoveResult::GameOver(GameStatus::Win(Player::O)));
+    assert_eq!(
+        turn.result,
+        MoveResult::GameOver(GameStatus::Win(Player::O))
+    );
     assert_eq!(turn.event, Some(TalkEvent::EngineWins));
 }
 

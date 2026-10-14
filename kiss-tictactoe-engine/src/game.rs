@@ -126,7 +126,10 @@ impl Game {
         // Human's move ended the game
         if self.status != GameStatus::InProgress {
             let result = MoveResult::GameOver(self.status);
-            return Ok(Turn { result, event: classify(self.status, false, false, quality) });
+            return Ok(Turn {
+                result,
+                event: classify(self.status, false, false, quality),
+            });
         }
 
         // User threat is seen before the engine blocks it (D-04).
@@ -163,7 +166,10 @@ impl Game {
         };
         let engine_threat =
             self.status == GameStatus::InProgress && has_threat(&self.board, Player::O);
-        Ok(Turn { result, event: classify(self.status, engine_threat, user_threat, quality) })
+        Ok(Turn {
+            result,
+            event: classify(self.status, engine_threat, user_threat, quality),
+        })
     }
 
     /// The current game status.
@@ -244,8 +250,14 @@ mod tests {
     #[test]
     fn invalid_position_rejected() {
         let mut game = Game::new();
-        assert_eq!(game.make_move(Position { row: 3, col: 0 }), Err(MoveError::InvalidPosition));
-        assert_eq!(game.make_move(Position { row: 0, col: 3 }), Err(MoveError::InvalidPosition));
+        assert_eq!(
+            game.make_move(Position { row: 3, col: 0 }),
+            Err(MoveError::InvalidPosition)
+        );
+        assert_eq!(
+            game.make_move(Position { row: 0, col: 3 }),
+            Err(MoveError::InvalidPosition)
+        );
         assert_eq!(game, Game::new());
     }
 
@@ -289,7 +301,10 @@ mod tests {
         let occupied = game.history()[0];
         assert_eq!(game.play(occupied), Err(MoveError::CellOccupied));
         assert_eq!(game, snapshot);
-        assert_eq!(game.play(Position { row: 3, col: 0 }), Err(MoveError::InvalidPosition));
+        assert_eq!(
+            game.play(Position { row: 3, col: 0 }),
+            Err(MoveError::InvalidPosition)
+        );
         assert_eq!(game, snapshot);
     }
 }
