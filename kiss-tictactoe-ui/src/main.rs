@@ -2,10 +2,11 @@ mod components;
 mod state;
 
 use components::board::Board;
+use components::scoreboard::Scoreboard;
 use components::speech_bubble::SpeechBubble;
 use dioxus::prelude::*;
-use kiss_tictactoe_engine::{Game, TalkEvent, Turn};
-use state::opening;
+use kiss_tictactoe_engine::{Game, MoveResult, TalkEvent, Turn};
+use state::{Tally, opening};
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 
@@ -32,6 +33,7 @@ fn App() -> Element {
     let init = use_hook(|| opening(clock_seed()));
     let mut commentator = use_signal(|| init.0.clone());
     let mut bubble = use_signal(|| init.1);
+    let mut tally = use_signal(Tally::default);
 
     let start_new_game = move |_: ()| {
         game.set(Game::new());
@@ -41,12 +43,17 @@ fn App() -> Element {
     };
 
     let handle_turn = move |turn: Turn| {
+        // Single increment point: the engine cannot report GameOver twice.
+        if let MoveResult::GameOver(status) = turn.result {
+            tally.write().record(status);
+        }
         let line = turn.event.map(|ev| commentator.write().line(ev));
         let next = bubble().after_turn(turn.result, line);
         bubble.set(next);
     };
 
     let b = bubble();
+    let t = tally();
 
     rsx! {
         document::Stylesheet { href: MAIN_CSS }
@@ -58,6 +65,7 @@ fn App() -> Element {
                 is_final: b.is_final,
             }
             Board { game, on_turn: handle_turn, on_new_game: start_new_game }
+            Scoreboard { wins: t.wins, draws: t.draws, losses: t.losses }
         }
     }
 }
