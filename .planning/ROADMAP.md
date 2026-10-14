@@ -30,7 +30,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. `cargo tree -p kiss-tictactoe-engine | grep dioxus` returns no output (engine purity confirmed at workspace creation)
   3. The GitHub repository is public and accessible at `github.com/ptdecker/kiss-tictactoe` with LICENSE (MIT), CONTRIBUTING.md, CODE_OF_CONDUCT.md, bug-report and feature-request issue templates, and a PR template all present
   4. `.gitignore` covers `target/`, `.idea/`, and `*.iml`; none of these paths appear in `git status` output on a fresh build
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Cargo workspace, engine crate, Dioxus UI scaffold, engine purity verification
+- [ ] 01-02-PLAN.md — GitHub repository creation and community artifacts (LICENSE, CONTRIBUTING.md, CODE_OF_CONDUCT.md, issue templates, PR template)
 
 ### Phase 2: Playable Game
 **Goal**: A human can sit down and play a complete tic-tac-toe game — clicking cells, watching the engine respond, and seeing a win, loss, or draw declared — all within a responsive Dioxus desktop UI.
@@ -81,7 +85,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/TBD | Not started | - |
+| 1. Foundation | 0/2 | Not started | - |
 | 2. Playable Game | 0/TBD | Not started | - |
 | 3. Personality | 0/TBD | Not started | - |
 | 4. Documentation | 0/TBD | Not started | - |
