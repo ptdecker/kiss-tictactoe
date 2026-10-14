@@ -79,8 +79,8 @@ impl Game {
     /// Play one full turn (human move plus engine reply) and report the
     /// result together with at most one trash-talk event.
     ///
-    /// Event priority (D-03): game over, engine threat, user threat, bad
-    /// move, good move.
+    /// Event priority (D-03, amended): game over, bad move, engine threat,
+    /// user threat, good move.
     ///
     /// # Errors
     ///

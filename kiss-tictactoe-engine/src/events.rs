@@ -17,9 +17,11 @@ pub(crate) fn has_threat(board: &Board, player: Player) -> bool {
     })
 }
 
-/// Choose the single event for a turn by fixed priority (D-03):
-/// game over, then engine threat, then user threat, then bad move, then
-/// good move.
+/// Choose the single event for a turn by fixed priority (D-03, amended):
+/// game over, then bad move, then engine threat, then user threat, then
+/// good move. A bad move outranks the threat events because every losing
+/// move against the perfect engine leaves it holding a threat, which would
+/// otherwise hide the bad-move taunt entirely.
 pub(crate) fn classify(
     status: GameStatus,
     engine_threat: bool,
@@ -29,16 +31,16 @@ pub(crate) fn classify(
     if let Some(event) = lifecycle_event(status) {
         return Some(event);
     }
+    if quality == MoveQuality::Bad {
+        return Some(TalkEvent::BadMove);
+    }
     if engine_threat {
         return Some(TalkEvent::EngineAboutToWin);
     }
     if user_threat {
         return Some(TalkEvent::UserAboutToWin);
     }
-    match quality {
-        MoveQuality::Bad => Some(TalkEvent::BadMove),
-        MoveQuality::Good => Some(TalkEvent::GoodMove),
-    }
+    Some(TalkEvent::GoodMove)
 }
 
 /// Map a final game status to its lifecycle event, if any.
@@ -104,8 +106,10 @@ mod tests {
     #[case(GameStatus::Win(Player::O), true, true, MoveQuality::Bad, Some(TalkEvent::EngineWins))]
     #[case(GameStatus::Win(Player::X), true, true, MoveQuality::Bad, Some(TalkEvent::UserWins))]
     #[case(GameStatus::Draw, true, true, MoveQuality::Bad, Some(TalkEvent::Draw))]
+    #[case(GameStatus::InProgress, true, true, MoveQuality::Bad, Some(TalkEvent::BadMove))]
+    #[case(GameStatus::InProgress, false, true, MoveQuality::Bad, Some(TalkEvent::BadMove))]
     #[case(GameStatus::InProgress, true, true, MoveQuality::Good, Some(TalkEvent::EngineAboutToWin))]
-    #[case(GameStatus::InProgress, false, true, MoveQuality::Bad, Some(TalkEvent::UserAboutToWin))]
+    #[case(GameStatus::InProgress, false, true, MoveQuality::Good, Some(TalkEvent::UserAboutToWin))]
     #[case(GameStatus::InProgress, false, false, MoveQuality::Bad, Some(TalkEvent::BadMove))]
     #[case(GameStatus::InProgress, false, false, MoveQuality::Good, Some(TalkEvent::GoodMove))]
     fn classify_priority(
