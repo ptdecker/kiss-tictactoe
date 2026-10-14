@@ -29,7 +29,7 @@ completed: 2026-10-14
 
 # Phase 3 Plan 03: Tactical Trash Talk Summary
 
-Game::play now emits exactly one event per turn by fixed priority (game over, engine threat, user threat, bad move, good move), with threats found by a shared-line-table scan and user moves judged by the engine's own minimax.
+Game::play now emits exactly one event per turn by fixed priority (game over, engine threat, user threat, bad move, good move) *(Amended after this plan in 370888d: bad move now ranks directly after game over, so the BadMove bank is reachable. See D-03 in 03-CONTEXT.md.)*, with threats found by a shared-line-table scan and user moves judged by the engine's own minimax.
 
 ## Tasks
 1. Threat detection, minimax move quality, TD-03/TD-04: 1097063

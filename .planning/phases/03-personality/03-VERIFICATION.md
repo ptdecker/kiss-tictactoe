@@ -91,3 +91,20 @@ None. The phase goal is achieved in the code.
 
 _Verified: 2026-10-14_
 _Verifier: Claude (gsd-verifier)_
+
+---
+
+## Addendum: changes after verification (2026-10-14)
+
+Verification passed before these commits. None change a success criterion; `cargo test --workspace` passes after each.
+
+| Commit | Change |
+|--------|--------|
+| ce3a8ae | WR-01: `move_quality` judges a faster loss as Bad when every move loses |
+| f1a98e6 | WR-02: removed `debug_assert!` from the click handler |
+| 5c99793 | WR-03: documented the perfect-engine invariant for `user_threat` |
+| 7584499 | IN-05: minimum window height raised to 700; Play again focus ring |
+| 9468076, cc952a4 | Initial desktop window size (440x720) from checkpoint feedback |
+| 370888d | D-03 amended: bad move outranks the threat events. Before this, `BadMove` never fired in real play (0 of all possible turns); now 26. ENGI-06 remains satisfied, and the BadMove bank is now reachable. |
+
+Review report: `03-REVIEW.md`; fix report: `03-REVIEW-FIX.md`.
