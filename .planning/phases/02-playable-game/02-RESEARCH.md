@@ -699,22 +699,25 @@ fn win_detection(#[case] _name: &str, #[case] board: Board, #[case] expected: Ga
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **`MoveError::GameAlreadyOver` variant**
    - What we know: D-03 specifies `CellOccupied` and `InvalidPosition`. The UI prevents invalid moves, but a third variant for "game already over" adds a clean defensive guard.
    - What's unclear: CONTEXT.md doesn't enumerate all `MoveError` variants, only two.
    - Recommendation: Add `GameAlreadyOver` as a third `MoveError` variant — it costs nothing and handles the case where a user bypasses UI guards.
+   - RESOLVED: Add `GameAlreadyOver` variant — implemented in 02-01 T2 engine task.
 
 2. **`Board` type: array vs. flat array**
    - What we know: D-01 mentions `Board` as a type; CONTEXT.md doesn't specify the internal representation.
    - What's unclear: `[[Option<Player>; 3]; 3]` (2D) vs. `[Option<Player>; 9]` (1D) are both common.
    - Recommendation: Use `[[Option<Player>; 3]; 3]` — indexes naturally with `board[row][col]`, matches `Position { row, col }` semantics from D-02.
+   - RESOLVED: Use `[[Option<Player>; 3]; 3]` — implemented in 02-01 T2 engine task.
 
 3. **`key` attribute on iterated Cells**
    - What we know: Dioxus 0.7 uses `key` for list reconciliation, similar to React.
    - What's unclear: Exact `key` syntax in 0.7 RSX not verified against official docs in this session.
    - Recommendation: Use `key: "{row}-{col}"` string format; verify compiles without warning during implementation.
+   - RESOLVED: Use `key: "{row}-{col}"` — implemented in 02-01 T3 UI task; verify at compile time.
 
 ---
 
