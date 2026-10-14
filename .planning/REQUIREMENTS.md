@@ -54,6 +54,11 @@
 - **POLSH-02**: Keyboard navigation for board (arrow keys) and controls (Tab); ARIA labels on all interactive elements
 - **POLSH-03**: CI pipeline (GitHub Actions) runs `cargo test`, `cargo doc`, and `mdbook build` on push
 
+### Platforms
+
+- **PLAT-01**: Documented instructions for building and running on Windows, Linux, iOS, Android, and web (in the README and the mdBook user guide)
+- **PLAT-02**: A test plan for each of those platforms (what is verified, how, and on what environment), including CI coverage where feasible
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -61,6 +66,7 @@
 | Multiplayer / second human player | Always user vs engine — adding P2P requires networking, not in scope |
 | Networking of any kind | Local game only; adds complexity with no demo value |
 | Persistent cross-session stats | Scoreboard resets on app restart; no database warranted |
+| Non-macOS platforms (v1) | v1 targets macOS desktop only. Run instructions and a test plan for Windows, Linux, iOS, Android, and web are deferred to v2 (PLAT-01, PLAT-02) |
 | Mobile builds (v1) | Architecture is mobile-ready but dioxus-mobile 0.7 is still alpha |
 | Multiple board sizes or variants | 3×3 classic only; KISS principle |
 | Settings menu | No configurable options in v1 |
