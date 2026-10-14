@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 
 **Wave 1**
-- [ ] 01-01-PLAN.md — Cargo workspace, engine crate, Dioxus UI scaffold, engine purity verification (INFRA-01, INFRA-02, INFRA-03)
+- [x] 01-01-PLAN.md — Cargo workspace, engine crate, Dioxus UI scaffold, engine purity verification (INFRA-01, INFRA-02, INFRA-03)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 01-02-PLAN.md — GitHub repository creation and community artifacts (INFRA-04, INFRA-05)
@@ -89,7 +89,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Planned | - |
+| 1. Foundation | 1/2 | In Progress|  |
 | 2. Playable Game | 0/TBD | Not started | - |
 | 3. Personality | 0/TBD | Not started | - |
 | 4. Documentation | 0/TBD | Not started | - |
