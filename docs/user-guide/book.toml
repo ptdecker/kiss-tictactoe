@@ -1,0 +1,8 @@
+[book]
+title = "kiss-tictactoe User Guide"
+authors = ["P. Todd Decker"]
+language = "en"
+src = "src"
+
+[output.html]
+git-repository-url = "https://github.com/ptdecker/kiss-tictactoe"
