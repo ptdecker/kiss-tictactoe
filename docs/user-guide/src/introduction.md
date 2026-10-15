@@ -8,4 +8,4 @@ Developers who want to build on the game engine should read the Engine Manual (i
 
 ## About this project
 
-This guide was written with Claude, an AI model made by Anthropic, and so was the game it describes. Claude wrote much of the code, tests and documentation under the direction and review of the project's author.
+This guide was written with Claude, an AI model made by Anthropic, and so was the game it describes. Claude wrote much of the code, tests and documentation under the direction and review of the project's author. Planning and execution were organized with the [Get Shit Done (GSD)](https://github.com/gsd-build/get-shit-done) toolset.

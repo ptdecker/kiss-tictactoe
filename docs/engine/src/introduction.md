@@ -22,4 +22,4 @@ assert_eq!(
 
 ## About this project
 
-This manual, the engine and the rest of the project were written with Claude, an AI model made by Anthropic (via Claude Code). Claude wrote much of the code, tests and documentation under the direction and review of the project's author.
+This manual, the engine and the rest of the project were written with Claude, an AI model made by Anthropic (via Claude Code). Claude wrote much of the code, tests and documentation under the direction and review of the project's author. Planning and execution were organized with the [Get Shit Done (GSD)](https://github.com/gsd-build/get-shit-done) toolset.
