@@ -60,3 +60,14 @@ kiss-tictactoe is a focused demonstration project. PRs are most likely to be acc
 - Stay within the existing engine/UI separation architecture
 
 Large feature additions or architectural changes are better discussed in a GitHub Issue first.
+
+## Dependency advisories
+
+Two Dependabot alerts were dismissed because the fix cannot be applied within the pinned Dioxus
+0.7.10. Both come from Dioxus's `wry`/`tao` stack and need Dioxus 0.8, which is still a pre-release.
+Revisit them when a stable Dioxus release updates those crates.
+
+- `glib` 0.18 (medium): only compiled on Linux through the gtk/webkit2gtk stack. It is not built on
+  macOS, the v1 target, and the app does not use the affected iterator.
+- `rand` 0.7.3 (low): a build-time dependency (`phf_generator` via `kuchikiki` via `wry`). It is not
+  linked into the app, and the advisory needs a custom logger that calls `rand::rng()`.
