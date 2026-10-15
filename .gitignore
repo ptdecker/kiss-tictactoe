@@ -4,3 +4,6 @@ dist/
 *.iml
 **/.DS_Store
 *.swp
+
+# GSD planning artifacts are kept local only
+.planning/
