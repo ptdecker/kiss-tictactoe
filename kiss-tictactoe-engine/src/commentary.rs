@@ -78,6 +78,14 @@ pub(crate) fn bank(event: TalkEvent) -> &'static [&'static str] {
     }
 }
 
+/// One splitmix64 step: a cheap bijective scrambler for seed values.
+fn splitmix64(seed: u64) -> u64 {
+    let mut z = seed.wrapping_add(0x9E37_79B9_7F4A_7C15);
+    z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
+    z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
+    z ^ (z >> 31)
+}
+
 /// Picks trash-talk lines for [`TalkEvent`]s using a seeded PRNG.
 ///
 /// The same seed yields the same sequence, and a category never returns the
@@ -99,14 +107,19 @@ pub struct Commentator {
 }
 
 impl Commentator {
-    /// Create a commentator from `seed`. A seed of 0 is remapped to a
-    /// nonzero constant, since xorshift has 0 as a fixed point.
+    /// Create a commentator from `seed`.
+    ///
+    /// The seed is scrambled with splitmix64 first, so raw clock values that
+    /// differ only in their low bits still give unrelated sequences. A mixed
+    /// state of 0 is remapped to a nonzero constant, since xorshift has 0 as
+    /// a fixed point.
     pub fn new(seed: u64) -> Self {
+        let mixed = splitmix64(seed);
         Self {
-            state: if seed == 0 {
+            state: if mixed == 0 {
                 0x9E37_79B9_7F4A_7C15
             } else {
-                seed
+                mixed
             },
             last: [None; TalkEvent::COUNT],
         }
@@ -126,6 +139,9 @@ impl Commentator {
     pub fn line(&mut self, event: TalkEvent) -> &'static str {
         let lines = bank(event);
         let n = lines.len() as u64;
+        // The no-repeat pick draws from `n - 1` slots, so a bank needs at
+        // least two lines (also guarded by `every_bank_has_4_to_8_lines`).
+        debug_assert!(n >= 2, "bank for {event:?} needs at least 2 lines");
         let idx = match self.last[event as usize] {
             None => (self.next() % n) as usize,
             Some(prev) => {
@@ -195,6 +211,17 @@ mod tests {
         let set: std::collections::HashSet<_> =
             (0..50).map(|_| c.line(TalkEvent::GameStart)).collect();
         assert!(set.len() >= 2);
+    }
+
+    #[test]
+    fn adjacent_seeds_diverge() {
+        let seq = |seed| {
+            let mut c = Commentator::new(seed);
+            (0..8)
+                .map(|_| c.line(TalkEvent::GameStart))
+                .collect::<Vec<_>>()
+        };
+        assert_ne!(seq(1), seq(2));
     }
 
     #[test]

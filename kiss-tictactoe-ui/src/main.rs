@@ -5,13 +5,15 @@ use components::board::Board;
 use components::controls::Controls;
 use components::scoreboard::Scoreboard;
 use components::speech_bubble::SpeechBubble;
+#[cfg(feature = "desktop")]
 use dioxus::desktop::{Config, LogicalSize, WindowBuilder};
 use dioxus::prelude::*;
-use kiss_tictactoe_engine::{Game, MoveResult, TalkEvent, Turn};
-use state::{Tally, opening};
+use kiss_tictactoe_engine::{Game, Turn};
+use state::{Tally, apply_turn, opening, start_game};
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 
+#[cfg(feature = "desktop")]
 fn main() {
     // The default window is too short to show the scoreboard and controls below
     // the board, so size it to fit the whole column on first launch.
@@ -22,6 +24,12 @@ fn main() {
     LaunchBuilder::desktop()
         .with_cfg(Config::new().with_window(window))
         .launch(App);
+}
+
+/// Other renderers (web, mobile) use their platform's default launch.
+#[cfg(not(feature = "desktop"))]
+fn main() {
+    dioxus::launch(App);
 }
 
 /// Seeds the commentator from the system clock.
@@ -47,18 +55,13 @@ fn App() -> Element {
 
     let start_new_game = move |_: ()| {
         game.set(Game::new());
-        let line = commentator.write().line(TalkEvent::GameStart);
-        let next = bubble().greeting(line);
+        let next = start_game(bubble(), &mut commentator.write());
         bubble.set(next);
     };
 
     let handle_turn = move |turn: Turn| {
-        // Single increment point: the engine cannot report GameOver twice.
-        if let MoveResult::GameOver(status) = turn.result {
-            tally.write().record(status);
-        }
-        let line = turn.event.map(|ev| commentator.write().line(ev));
-        let next = bubble().after_turn(turn.result, line);
+        // Single increment point: the tally is only recorded in `apply_turn`.
+        let next = apply_turn(&mut tally.write(), bubble(), &mut commentator.write(), turn);
         bubble.set(next);
     };
 
@@ -78,7 +81,7 @@ fn App() -> Element {
             Scoreboard { wins: t.wins, draws: t.draws, losses: t.losses }
             Controls {
                 on_new_game: start_new_game,
-                on_reset_scores: move |_| tally.set(Tally::default()),
+                on_reset_scores: move |_| tally.write().reset(),
             }
         }
     }

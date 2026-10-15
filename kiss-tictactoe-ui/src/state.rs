@@ -3,7 +3,7 @@
 //! Kept free of Dioxus types so the transitions can be unit-tested without a
 //! runtime.
 
-use kiss_tictactoe_engine::{Commentator, GameStatus, MoveResult, Player, TalkEvent};
+use kiss_tictactoe_engine::{Commentator, GameStatus, MoveResult, Player, TalkEvent, Turn};
 
 /// Session score from the player's perspective (D-17).
 ///
@@ -27,6 +27,11 @@ impl Tally {
             GameStatus::Draw => self.draws = self.draws.saturating_add(1),
             GameStatus::InProgress => {}
         }
+    }
+
+    /// Zeroes every count (Reset Scores, D-15).
+    pub fn reset(&mut self) {
+        *self = Self::default();
     }
 
     /// Labelled counts in display order, left to right (D-17).
@@ -71,6 +76,26 @@ impl BubbleState {
             },
         }
     }
+}
+
+/// Starts a new game: a fresh greeting that is never final (D-14..16).
+pub fn start_game(bubble: BubbleState, commentator: &mut Commentator) -> BubbleState {
+    bubble.greeting(commentator.line(TalkEvent::GameStart))
+}
+
+/// Applies one finished turn: records a game-over in `tally` (the only place
+/// it is incremented) and returns the next bubble state.
+pub fn apply_turn(
+    tally: &mut Tally,
+    bubble: BubbleState,
+    commentator: &mut Commentator,
+    turn: Turn,
+) -> BubbleState {
+    if let MoveResult::GameOver(status) = turn.result {
+        tally.record(status);
+    }
+    let line = turn.event.map(|ev| commentator.line(ev));
+    bubble.after_turn(turn.result, line)
 }
 
 /// Creates the commentator and the initial greeting bubble for app launch.
@@ -204,22 +229,74 @@ mod tests {
     }
 
     #[test]
-    fn reset_is_default() {
-        // Reset Scores sets the tally to `Tally::default()`.
-        let before = Tally {
+    fn reset_zeroes_a_populated_tally() {
+        let mut t = Tally {
             wins: 4,
             draws: 5,
             losses: 6,
         };
-        assert_ne!(before, Tally::default());
-        assert_eq!(
-            Tally::default(),
-            Tally {
-                wins: 0,
-                draws: 0,
-                losses: 0
-            }
+        t.reset();
+        assert_eq!(t, Tally::default());
+    }
+
+    fn over(status: GameStatus, event: TalkEvent) -> Turn {
+        Turn {
+            result: MoveResult::GameOver(status),
+            event: Some(event),
+        }
+    }
+
+    #[test]
+    fn apply_turn_records_game_over_once_and_marks_final() {
+        let mut t = Tally::default();
+        let mut c = Commentator::new(1);
+        let b = apply_turn(
+            &mut t,
+            BubbleState::default(),
+            &mut c,
+            over(GameStatus::Win(Player::O), TalkEvent::EngineWins),
         );
+        assert_eq!(t.losses, 1);
+        assert_eq!((t.wins, t.draws), (0, 0));
+        assert!(b.is_final);
+        assert!(b.message.is_some());
+    }
+
+    #[test]
+    fn apply_turn_continuing_leaves_tally_alone() {
+        let mut t = Tally::default();
+        let mut c = Commentator::new(1);
+        let turn = Turn {
+            result: MoveResult::Continuing,
+            event: Some(TalkEvent::GoodMove),
+        };
+        let b = apply_turn(&mut t, BubbleState::default(), &mut c, turn);
+        assert_eq!(t, Tally::default());
+        assert!(!b.is_final);
+        assert_eq!(b.serial, 1);
+    }
+
+    #[test]
+    fn apply_turn_without_event_keeps_bubble() {
+        let mut t = Tally::default();
+        let mut c = Commentator::new(1);
+        let before = BubbleState::default().greeting("hi");
+        let turn = Turn {
+            result: MoveResult::Continuing,
+            event: None,
+        };
+        assert_eq!(apply_turn(&mut t, before, &mut c, turn), before);
+    }
+
+    #[test]
+    fn start_game_clears_final_and_bumps_serial() {
+        let mut c = Commentator::new(1);
+        let fin =
+            BubbleState::default().after_turn(MoveResult::GameOver(GameStatus::Draw), Some("x"));
+        let next = start_game(fin, &mut c);
+        assert!(!next.is_final);
+        assert_eq!(next.serial, fin.serial + 1);
+        assert!(next.message.is_some());
     }
 
     #[test]

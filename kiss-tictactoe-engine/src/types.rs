@@ -64,9 +64,7 @@ pub enum TalkEvent {
     EngineWins,
     /// The user won the game.
     /// Unreachable against the perfect engine; reserved for the v2 training
-    /// mode (TRAIN-01).
-    // Unreachable against the perfect-minimax engine; exists as the hook for
-    // TRAIN-01 (D-01).
+    /// mode (TRAIN-01, D-01).
     UserWins,
     /// The game ended in a draw.
     Draw,
@@ -84,7 +82,7 @@ impl TalkEvent {
     /// Number of event categories.
     pub const COUNT: usize = 8;
     /// Every event category, in declaration order (index is `ev as usize`).
-    pub const ALL: [TalkEvent; 8] = [
+    pub const ALL: [TalkEvent; Self::COUNT] = [
         TalkEvent::GameStart,
         TalkEvent::EngineWins,
         TalkEvent::UserWins,
@@ -118,3 +116,15 @@ impl fmt::Display for MoveError {
 }
 
 impl std::error::Error for MoveError {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn talk_event_all_is_in_declaration_order() {
+        for (i, ev) in TalkEvent::ALL.iter().enumerate() {
+            assert_eq!(*ev as usize, i, "{ev:?} is out of order in ALL");
+        }
+    }
+}

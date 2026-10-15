@@ -285,6 +285,15 @@ body {
     opacity: 1;
 }
 
+/* Keep the message visible for users who ask for less motion; the next
+   event replaces it anyway. */
+@media (prefers-reduced-motion: reduce) {
+    .speech-bubble--fading {
+        animation: none;
+        opacity: 1;
+    }
+}
+
 .speech-bubble--empty {
     visibility: hidden;
 }

@@ -298,3 +298,17 @@ fn every_turn_has_at_most_one_event_and_matches_make_move() {
         }
     }
 }
+
+#[test]
+fn bad_move_reports_bad_move_and_engine_replies() {
+    let mut game = Game::new();
+    game.play(pos(0, 1)).expect("legal move");
+    let turn = game.play(pos(0, 2)).expect("legal move");
+    assert_eq!(turn.result, MoveResult::Continuing);
+    assert_eq!(turn.event, Some(TalkEvent::BadMove));
+    assert_eq!(
+        game.board()[1][0],
+        Some(Player::O),
+        "engine should reply at (1,0)"
+    );
+}
