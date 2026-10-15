@@ -32,6 +32,16 @@ cargo clippy --all-targets -- -D warnings
 
 Both commands must produce zero warnings and zero errors. PRs with clippy warnings will be asked to fix them before merge.
 
+## Documentation
+
+The two mdBooks live in `docs/user-guide` and `docs/engine`. They require mdbook 0.5.4:
+
+```sh
+cargo install mdbook --version 0.5.4 --locked
+```
+
+Before submitting docs changes, run `scripts/check-docs.sh`; it must print `docs OK`. Books are built locally; there is no publishing step.
+
 ## Scope Note
 
 kiss-tictactoe is a focused demonstration project. PRs are most likely to be accepted when they:
