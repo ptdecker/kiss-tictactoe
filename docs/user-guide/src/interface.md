@@ -8,6 +8,10 @@ The window is titled kiss-tictactoe. From top to bottom it shows:
 4. **Scoreboard:** three counts from your point of view: Wins, Draws and Losses.
 5. **Controls:** the New Game button and the quieter Reset Scores button. See [Controls](controls.md).
 
+![The board mid-game, with the scoreboard and controls below](images/board.png)
+
 When a game ends, an overlay covers the board and shows "You win!", "Engine wins!" or "Draw!" together with a Play again button.
+
+![The game-over overlay after the engine wins](images/game-over.png)
 
 The window can be narrowed to phone width and the layout still fits.
