@@ -105,6 +105,10 @@ cargo doc --workspace --no-deps --open
 scripts/check-docs.sh
 ```
 
+## Built with Claude
+
+This project was built with Claude, an AI model made by Anthropic (via Claude Code). Claude wrote much of the code, tests and documentation, working under the direction and review of the project's author.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Please read the [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.

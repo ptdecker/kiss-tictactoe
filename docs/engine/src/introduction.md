@@ -19,3 +19,7 @@ assert_eq!(
     Turn { result: MoveResult::Continuing, event: Some(TalkEvent::GoodMove) }
 );
 ```
+
+## About this project
+
+This manual, the engine and the rest of the project were written with Claude, an AI model made by Anthropic (via Claude Code). Claude wrote much of the code, tests and documentation under the direction and review of the project's author.
