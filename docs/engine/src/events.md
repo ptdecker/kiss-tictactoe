@@ -8,7 +8,7 @@ category; the front end turns it into words with a `Commentator`.
 ## The eight categories
 
 | Event              | When it fires                                                                                                                                                    |
-|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GameStart`        | Never returned by `Game::play`. The front end asks for a `GameStart` line itself when it creates a game (the desktop app does so when it opens and on New Game). |
 | `EngineWins`       | The final turn, when the engine completes a line.                                                                                                                |
 | `UserWins`         | The final turn, when you complete a line. Reserved for the planned training mode; it cannot happen against the perfect engine today.                             |

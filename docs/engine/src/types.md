@@ -46,7 +46,7 @@ rejected: `CellOccupied`, `InvalidPosition` or `GameAlreadyOver`. It implements 
 ## TalkEvent
 
 [`TalkEvent`](../../../target/doc/kiss_tictactoe_engine/enum.TalkEvent.html) names one of eight
-trash-talk categories. The enum `TalkEvent::ALL` lists them in declaration order and 
+trash-talk categories. The enum `TalkEvent::ALL` lists them in declaration order and
 `TalkEvent::COUNT` is eight (8). Details are in [The event system](events.md).
 
 ## Samples
