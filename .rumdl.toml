@@ -1,6 +1,8 @@
 # Markdown lint/format config. Run `rumdl check .` to lint and `rumdl fmt .` to reflow and fix.
+# MD057 (relative link exists) is off: engine-manual links point into target/doc, which only exists
+# after cargo doc. scripts/check-docs.sh checks links itself.
 [global]
-disable = ["MD041"]
+disable = ["MD041", "MD057"]
 exclude = [".planning", ".claude", "target", "docs/*/book", "CLAUDE.md", "CODE_OF_CONDUCT.md"]
 
 [MD013]
