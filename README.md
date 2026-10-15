@@ -2,9 +2,12 @@
 
 A Rust tic-tac-toe demonstration project showcasing clean library/UI separation.
 
-The game engine lives in a platform-agnostic library crate (`kiss-tictactoe-engine`) with a clean public API. A [Dioxus 0.7](https://dioxuslabs.com/) desktop app (`kiss-tictactoe-ui`) provides the interface. Always user vs. engine — no multiplayer, no networking.
+The game engine lives in a platform-agnostic library crate (`kiss-tictactoe-engine`) with a clean
+public API. A [Dioxus 0.7](https://dioxuslabs.com/) desktop app (`kiss-tictactoe-ui`) provides the interface. Always
+user vs. engine — no multiplayer, no networking.
 
-**Core value:** A fully playable, good-looking tic-tac-toe game where the engine trash talks you — demonstrating idiomatic Rust architecture.
+**Core value:** A fully playable, good-looking tic-tac-toe game where the engine trash talks you — 
+demonstrating idiomatic Rust architecture.
 
 ## Features
 
@@ -41,11 +44,12 @@ kiss-tictactoe/
 └── scripts/check-docs.sh
 ```
 
-The engine crate has zero platform dependencies — it compiles unchanged for desktop, web, and mobile targets. The UI crate depends on the engine; the engine never depends on the UI.
+The engine crate has zero platform dependencies — it compiles unchanged for desktop, web, and mobile
+targets. The UI crate depends on the engine; the engine never depends on the UI.
 
 ## Platform
 
-v1 targets macOS only. Other platforms are planned.
+Version one (v1) targets macOS only. Other platforms are planned.
 
 ## Prerequisites
 
@@ -75,7 +79,9 @@ cd kiss-tictactoe-ui
 dx serve
 ```
 
-If `dx` fails with `sccache: Compiler not supported`, a global `build.rustc-wrapper = "sccache"` in `~/.cargo/config.toml` is combining with dx's own rustc wrapper. Either add this to `~/.zshrc` and open a new terminal:
+If `dx` fails with `sccache: Compiler not supported`, a global `build.rustc-wrapper = "sccache"` in
+`~/.cargo/config.toml` is combining with dx's own rustc wrapper. Either add this to `~/.zshrc` and
+open a new terminal:
 
 ```sh
 dx() { RUSTC_WRAPPER= command dx "$@"; }
@@ -107,7 +113,10 @@ scripts/check-docs.sh
 
 ## Built with Claude
 
-This project was built with Claude, an AI model made by Anthropic (via Claude Code). Claude wrote much of the code, tests and documentation, working under the direction and review of the project's author. Planning and execution were organized with the [Get Shit Done (GSD)](https://github.com/gsd-build/get-shit-done) toolset.
+This project was built with Claude, an AI model made by Anthropic (via Claude Code). Claude wrote
+much of the code, tests and documentation, working under the direction and review of the project's
+author. Planning and execution were organized with the
+[Get Shit Done (GSD)](https://github.com/gsd-build/get-shit-done) toolset.
 
 ## Contributing
 

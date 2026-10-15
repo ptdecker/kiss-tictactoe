@@ -10,7 +10,8 @@ The window is titled kiss-tictactoe. From top to bottom it shows:
 
 ![The board mid-game, with the scoreboard and controls below](images/board.png)
 
-When a game ends, an overlay covers the board and shows "You win!", "Engine wins!" or "Draw!" together with a Play again button.
+When a game ends, an overlay covers the board and shows "You win!", "Engine wins!" or "Draw!"
+together with a Play again button.
 
 ![The game-over overlay after the engine wins](images/game-over.png)
 
