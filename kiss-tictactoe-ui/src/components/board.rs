@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use kiss_tictactoe_engine::{Board as EngineBoard, Game, GameStatus, Player, Position};
+use kiss_tictactoe_engine::{Board as EngineBoard, Game, GameStatus, Player, Position, Turn};
 
 use super::cell::Cell;
 use super::game_over_overlay::GameOverOverlay;
@@ -9,7 +9,7 @@ use super::game_over_overlay::GameOverOverlay;
 ///
 /// A cell is interactive when it is empty **and** the game is still in
 /// progress.
-pub fn board_cells(
+pub(crate) fn board_cells(
     board: &EngineBoard,
     status: GameStatus,
 ) -> Vec<(Position, Option<Player>, bool)> {
@@ -27,9 +27,14 @@ pub fn board_cells(
 /// The 3×3 game board component.
 ///
 /// Reads board state from `game`, renders nine [`Cell`] components, and
-/// forwards clicks to `game.write().make_move(pos)`.
+/// forwards clicks to `game.write().play(pos)`. Each resulting [`Turn`] is
+/// passed to `on_turn`; the overlay's Play again calls `on_new_game`.
 #[component]
-pub fn Board(game: Signal<Game>) -> Element {
+pub fn Board(
+    game: Signal<Game>,
+    on_turn: EventHandler<Turn>,
+    on_new_game: EventHandler<()>,
+) -> Element {
     // Clone values out before any write to avoid borrow conflicts (Pitfall 1)
     let board = *game.read().board();
     let status = game.read().status();
@@ -45,7 +50,11 @@ pub fn Board(game: Signal<Game>) -> Element {
                         content,
                         interactive,
                         on_click: move |p: Position| {
-                            let _ = game.write().make_move(p);
+                            // Rapid clicks can race the re-render; ignore expected errors.
+                            let outcome = game.write().play(p);
+                            if let Ok(turn) = outcome {
+                                on_turn.call(turn);
+                            }
                         },
                     }
                 }
@@ -53,7 +62,7 @@ pub fn Board(game: Signal<Game>) -> Element {
             if status != GameStatus::InProgress {
                 GameOverOverlay {
                     status,
-                    on_play_again: move |_| game.set(Game::new()),
+                    on_play_again: move |_| on_new_game.call(()),
                 }
             }
         }
@@ -103,24 +112,17 @@ mod tests {
                 assert!(
                     !interactive,
                     "Occupied cell at ({},{}) should not be interactive",
-                    pos.row,
-                    pos.col
+                    pos.row, pos.col
                 );
             }
         }
 
         // Verify X cell is marked
-        let x_cells: Vec<_> = cells
-            .iter()
-            .filter(|(_, c, _)| *c == Some(X))
-            .collect();
+        let x_cells: Vec<_> = cells.iter().filter(|(_, c, _)| *c == Some(X)).collect();
         assert_eq!(x_cells.len(), 1, "Exactly one X cell");
 
         // Verify O cell is marked
-        let o_cells: Vec<_> = cells
-            .iter()
-            .filter(|(_, c, _)| *c == Some(O))
-            .collect();
+        let o_cells: Vec<_> = cells.iter().filter(|(_, c, _)| *c == Some(O)).collect();
         assert_eq!(o_cells.len(), 1, "Exactly one O cell");
     }
 
@@ -153,8 +155,7 @@ mod tests {
             assert!(
                 !interactive,
                 "All cells should be frozen after game over, but ({},{}) is interactive",
-                pos.row,
-                pos.col
+                pos.row, pos.col
             );
         }
     }

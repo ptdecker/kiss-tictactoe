@@ -11,17 +11,17 @@
 - [ ] **ENGI-02**: Engine detects win (any row/column/diagonal) and draw (board full, no winner) after every move
 - [ ] **ENGI-03**: Engine exposes a clean public API usable from any UI or interface with zero Dioxus dependency
 - [ ] **ENGI-04**: Engine AI uses minimax and plays optimally (always draws against perfect play)
-- [ ] **ENGI-05**: Engine emits game-lifecycle trash talk events: game start, engine wins, user wins, draw result
-- [ ] **ENGI-06**: Engine emits tactical trash talk events: engine about to win, user about to win (two in a row), engine assesses a good move, engine assesses a bad move
-- [ ] **ENGI-07**: Message bank contains 4–8 strings per trash talk event category (~32–64 strings total), selected randomly per trigger
+- [x] **ENGI-05**: Engine emits game-lifecycle trash talk events: game start, engine wins, user wins, draw result
+- [x] **ENGI-06**: Engine emits tactical trash talk events: engine about to win, user about to win (two in a row), engine assesses a good move, engine assesses a bad move
+- [x] **ENGI-07**: Message bank contains 4–8 strings per trash talk event category (~32–64 strings total), selected randomly per trigger
 
 ### UI
 
 - [ ] **UI-01**: User can click any empty cell to place their mark; occupied and invalid cells are non-interactive
-- [ ] **UI-02**: Engine speech bubble displays context-appropriate trash talk after each game event
-- [ ] **UI-03**: Session scoreboard shows cumulative wins, losses, and draws for the current session
-- [ ] **UI-04**: User can start a new game (board resets; score persists)
-- [ ] **UI-05**: User can reset the session scoreboard independently of starting a new game
+- [x] **UI-02**: Engine speech bubble displays context-appropriate trash talk after each game event
+- [x] **UI-03**: Session scoreboard shows cumulative wins, losses, and draws for the current session
+- [x] **UI-04**: User can start a new game (board resets; score persists)
+- [x] **UI-05**: User can reset the session scoreboard independently of starting a new game
 - [ ] **UI-06**: UI layout is responsive from phone width upward using plain CSS (no Tailwind)
 
 ### Infrastructure
@@ -54,6 +54,11 @@
 - **POLSH-02**: Keyboard navigation for board (arrow keys) and controls (Tab); ARIA labels on all interactive elements
 - **POLSH-03**: CI pipeline (GitHub Actions) runs `cargo test`, `cargo doc`, and `mdbook build` on push
 
+### Platforms
+
+- **PLAT-01**: Documented instructions for building and running on Windows, Linux, iOS, Android, and web (in the README and the mdBook user guide)
+- **PLAT-02**: A test plan for each of those platforms (what is verified, how, and on what environment), including CI coverage where feasible
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -61,6 +66,7 @@
 | Multiplayer / second human player | Always user vs engine — adding P2P requires networking, not in scope |
 | Networking of any kind | Local game only; adds complexity with no demo value |
 | Persistent cross-session stats | Scoreboard resets on app restart; no database warranted |
+| Non-macOS platforms (v1) | v1 targets macOS desktop only. Run instructions and a test plan for Windows, Linux, iOS, Android, and web are deferred to v2 (PLAT-01, PLAT-02) |
 | Mobile builds (v1) | Architecture is mobile-ready but dioxus-mobile 0.7 is still alpha |
 | Multiple board sizes or variants | 3×3 classic only; KISS principle |
 | Settings menu | No configurable options in v1 |
@@ -83,13 +89,13 @@
 | ENGI-04 | Phase 2 | Pending |
 | UI-01 | Phase 2 | Pending |
 | UI-06 | Phase 2 | Pending |
-| ENGI-05 | Phase 3 | Pending |
-| ENGI-06 | Phase 3 | Pending |
-| ENGI-07 | Phase 3 | Pending |
-| UI-02 | Phase 3 | Pending |
-| UI-03 | Phase 3 | Pending |
-| UI-04 | Phase 3 | Pending |
-| UI-05 | Phase 3 | Pending |
+| ENGI-05 | Phase 3 | Complete |
+| ENGI-06 | Phase 3 | Complete |
+| ENGI-07 | Phase 3 | Complete |
+| UI-02 | Phase 3 | Complete |
+| UI-03 | Phase 3 | Complete |
+| UI-04 | Phase 3 | Complete |
+| UI-05 | Phase 3 | Complete |
 | INFRA-06 | Phase 4 | Pending |
 | INFRA-07 | Phase 4 | Pending |
 

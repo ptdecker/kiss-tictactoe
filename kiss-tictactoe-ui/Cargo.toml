@@ -5,6 +5,10 @@ edition = "2024"
 license = "MIT"
 
 [dependencies]
-dioxus = { version = "0.7.10", features = ["desktop"] }
+dioxus = { version = "0.7.10" }
 manganis = "0.7.10"
 kiss-tictactoe-engine = { path = "../kiss-tictactoe-engine" }
+
+[features]
+default = ["desktop"]
+desktop = ["dioxus/desktop"]

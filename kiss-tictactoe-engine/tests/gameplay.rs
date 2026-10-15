@@ -1,4 +1,6 @@
-use kiss_tictactoe_engine::{Game, GameStatus, MoveError, MoveResult, Player, Position};
+use kiss_tictactoe_engine::{
+    Commentator, Game, GameStatus, MoveError, MoveResult, Player, Position, TalkEvent, Turn,
+};
 
 fn first_empty(game: &Game) -> Option<Position> {
     for row in 0..3u8 {
@@ -107,4 +109,206 @@ fn full_game_ends_and_rejects_further_moves() {
             assert_eq!(err, Err(MoveError::GameAlreadyOver));
         }
     }
+}
+
+#[test]
+fn play_matches_make_move() {
+    let mut a = Game::new();
+    let mut b = Game::new();
+    while a.status() == GameStatus::InProgress {
+        let pos = first_empty(&a).expect("empty cell while in progress");
+        let r = a.make_move(pos).expect("legal move");
+        let turn: Turn = b.play(pos).expect("legal move");
+        assert_eq!(r, turn.result, "make_move and play must agree");
+        assert_eq!(a, b, "game state must match after each turn");
+    }
+}
+
+#[test]
+fn full_game_ends_with_lifecycle_event() {
+    let mut game = Game::new();
+    loop {
+        let pos = first_empty(&game).expect("empty cell while in progress");
+        let turn = game.play(pos).expect("legal move");
+        if let MoveResult::GameOver(s) = turn.result {
+            let expected = match s {
+                GameStatus::Win(Player::O) => TalkEvent::EngineWins,
+                GameStatus::Win(Player::X) => TalkEvent::UserWins,
+                GameStatus::Draw => TalkEvent::Draw,
+                GameStatus::InProgress => panic!("GameOver(InProgress)"),
+            };
+            assert_eq!(turn.event, Some(expected));
+            break;
+        }
+    }
+}
+
+#[test]
+fn non_final_turns_never_carry_lifecycle_events() {
+    let mut game = Game::new();
+    while game.status() == GameStatus::InProgress {
+        let pos = first_empty(&game).expect("empty cell while in progress");
+        let turn = game.play(pos).expect("legal move");
+        if turn.result == MoveResult::Continuing {
+            assert!(
+                !matches!(
+                    turn.event,
+                    Some(TalkEvent::GameStart)
+                        | Some(TalkEvent::EngineWins)
+                        | Some(TalkEvent::UserWins)
+                        | Some(TalkEvent::Draw)
+                ),
+                "lifecycle event on a non-final turn: {:?}",
+                turn.event
+            );
+        }
+    }
+}
+
+#[test]
+fn play_after_game_over_is_rejected() {
+    let mut game = Game::new();
+    while game.status() == GameStatus::InProgress {
+        let pos = first_empty(&game).expect("empty cell while in progress");
+        game.play(pos).expect("legal move");
+    }
+    for row in 0..3u8 {
+        for col in 0..3u8 {
+            assert_eq!(
+                game.play(Position { row, col }),
+                Err(MoveError::GameAlreadyOver)
+            );
+        }
+    }
+}
+
+#[test]
+fn commentator_lines_come_from_banks() {
+    for ev in TalkEvent::ALL {
+        let line = Commentator::new(42).line(ev);
+        assert!(!line.trim().is_empty(), "empty line for {ev:?}");
+        assert!(
+            line.chars().count() <= 56,
+            "line too long for {ev:?}: {line}"
+        );
+    }
+}
+
+#[test]
+fn commentator_same_seed_same_sequence() {
+    let mut a = Commentator::new(7);
+    let mut b = Commentator::new(7);
+    for i in 0..40 {
+        let ev = TalkEvent::ALL[i % TalkEvent::COUNT];
+        assert_eq!(a.line(ev), b.line(ev), "sequences diverged at call {i}");
+    }
+}
+
+fn pos(row: u8, col: u8) -> Position {
+    Position { row, col }
+}
+
+#[test]
+fn user_threat_reported_before_engine_blocks() {
+    let mut game = Game::new();
+    game.play(pos(1, 1)).expect("legal move");
+    assert_eq!(
+        game.board()[0][0],
+        Some(Player::O),
+        "engine should reply in the corner (0,0)"
+    );
+    let turn = game.play(pos(0, 1)).expect("legal move");
+    assert_eq!(
+        turn,
+        Turn {
+            result: MoveResult::Continuing,
+            event: Some(TalkEvent::UserAboutToWin)
+        }
+    );
+    assert_eq!(
+        game.board()[2][1],
+        Some(Player::O),
+        "engine must block at (2,1)"
+    );
+}
+
+#[test]
+fn engine_threat_reported_after_reply() {
+    let mut game = Game::new();
+    game.play(pos(1, 1)).expect("legal move");
+    assert_eq!(
+        game.board()[0][0],
+        Some(Player::O),
+        "engine should reply in the corner (0,0)"
+    );
+    let turn = game.play(pos(2, 2)).expect("legal move");
+    assert_eq!(turn.result, MoveResult::Continuing);
+    assert_eq!(turn.event, Some(TalkEvent::EngineAboutToWin));
+    assert_eq!(
+        game.board()[0][2],
+        Some(Player::O),
+        "engine should reply at (0,2)"
+    );
+}
+
+#[test]
+fn first_move_is_good() {
+    let mut game = Game::new();
+    let turn = game.play(pos(1, 1)).expect("legal move");
+    assert_eq!(turn.event, Some(TalkEvent::GoodMove));
+}
+
+#[test]
+fn blunder_into_loss_reports_engine_wins() {
+    let mut game = Game::new();
+    game.play(pos(1, 1)).expect("legal move");
+    game.play(pos(2, 2)).expect("legal move");
+    assert_eq!(
+        game.board()[0][2],
+        Some(Player::O),
+        "engine should hold (0,0) and (0,2)"
+    );
+    let turn = game.play(pos(1, 0)).expect("legal move");
+    assert_eq!(
+        turn.result,
+        MoveResult::GameOver(GameStatus::Win(Player::O))
+    );
+    assert_eq!(turn.event, Some(TalkEvent::EngineWins));
+}
+
+#[test]
+fn every_turn_has_at_most_one_event_and_matches_make_move() {
+    let mut a = Game::new();
+    let mut b = Game::new();
+    while a.status() == GameStatus::InProgress {
+        let p = first_empty(&a).expect("empty cell while in progress");
+        let turn = a.play(p).expect("legal move");
+        let result = b.make_move(p).expect("legal move");
+        assert_eq!(turn.result, result);
+        if turn.result == MoveResult::Continuing {
+            assert!(matches!(
+                turn.event,
+                Some(
+                    TalkEvent::EngineAboutToWin
+                        | TalkEvent::UserAboutToWin
+                        | TalkEvent::GoodMove
+                        | TalkEvent::BadMove
+                )
+            ));
+        }
+    }
+}
+
+#[test]
+fn bad_move_reports_bad_move_and_engine_replies() {
+    let mut game = Game::new();
+    game.play(pos(0, 1)).expect("legal move");
+    let turn = game.play(pos(0, 2)).expect("legal move");
+    assert_eq!(turn.result, MoveResult::Continuing);
+    assert_eq!(turn.event, Some(TalkEvent::BadMove));
+    assert_eq!(
+        game.board()[1][0],
+        Some(Player::O),
+        "engine should reply at (1,0)"
+    );
 }

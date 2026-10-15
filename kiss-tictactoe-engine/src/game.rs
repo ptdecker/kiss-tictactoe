@@ -1,15 +1,28 @@
 //! The `Game` struct: the primary entry point for the engine API.
 
-use crate::ai::best_engine_move;
+use crate::ai::{best_engine_move, move_quality};
 use crate::detection::detect_status;
-use crate::types::{Board, GameStatus, MoveError, MoveResult, Player, Position};
+use crate::events::{classify, has_threat};
+use crate::types::{Board, GameStatus, MoveError, MoveResult, Player, Position, TalkEvent};
+
+/// One full turn: the human's move plus the engine's reply.
+///
+/// `event` holds at most one trash-talk event, chosen by fixed priority
+/// (D-03).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Turn {
+    /// What happened to the game as a result of this turn.
+    pub result: MoveResult,
+    /// The trash-talk event for this turn, if any.
+    pub event: Option<TalkEvent>,
+}
 
 /// A tic-tac-toe game tracking board state, current player, game status,
 /// and move history.
 ///
 /// The human always plays as `X` (moves first); the engine always plays as
 /// `O`. After each valid human move the engine responds automatically inside
-/// the same [`Game::make_move`] call.
+/// the same [`Game::play`] (or [`Game::make_move`]) call.
 ///
 /// # Example
 ///
@@ -60,6 +73,33 @@ impl Game {
     /// - [`MoveError::InvalidPosition`]: `pos.row > 2` or `pos.col > 2`
     /// - [`MoveError::CellOccupied`]: the target cell is not empty
     pub fn make_move(&mut self, pos: Position) -> Result<MoveResult, MoveError> {
+        self.play(pos).map(|t| t.result)
+    }
+
+    /// Play one full turn (human move plus engine reply) and report the
+    /// result together with at most one trash-talk event.
+    ///
+    /// Event priority (D-03, amended): game over, bad move, engine threat,
+    /// user threat, good move.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error (without mutating state) when:
+    /// - [`MoveError::GameAlreadyOver`]: the game has already ended
+    /// - [`MoveError::InvalidPosition`]: `pos.row > 2` or `pos.col > 2`
+    /// - [`MoveError::CellOccupied`]: the target cell is not empty
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use kiss_tictactoe_engine::{Game, MoveResult, Position};
+    ///
+    /// let mut game = Game::new();
+    /// let turn = game.play(Position { row: 1, col: 1 }).unwrap();
+    /// assert_eq!(turn.result, MoveResult::Continuing);
+    /// assert_eq!(game.history().len(), 2);
+    /// ```
+    pub fn play(&mut self, pos: Position) -> Result<Turn, MoveError> {
         // Guard: game must be in progress
         if self.status != GameStatus::InProgress {
             return Err(MoveError::GameAlreadyOver);
@@ -75,6 +115,9 @@ impl Game {
             return Err(MoveError::CellOccupied);
         }
 
+        // Judge the move against the board BEFORE it is placed (D-02)
+        let quality = move_quality(&self.board, pos);
+
         // Place the human's X
         self.board[pos.row as usize][pos.col as usize] = Some(Player::X);
         self.history.push(pos);
@@ -82,8 +125,19 @@ impl Game {
 
         // Human's move ended the game
         if self.status != GameStatus::InProgress {
-            return Ok(MoveResult::GameOver(self.status));
+            let result = MoveResult::GameOver(self.status);
+            return Ok(Turn {
+                result,
+                event: classify(self.status, false, false, quality),
+            });
         }
+
+        // User threat is seen before the engine blocks it (D-04).
+        // INVARIANT: the engine is perfect, so it always blocks (or wins
+        // over) an open X threat. If the engine ever becomes imperfect
+        // (TRAIN-01), re-check that the threat was actually blocked after
+        // the reply before reporting UserAboutToWin.
+        let user_threat = has_threat(&self.board, Player::X);
 
         // Engine responds as O
         self.current_player = Player::O;
@@ -105,11 +159,17 @@ impl Game {
         // Restore turn to X regardless of outcome
         self.current_player = Player::X;
 
-        if self.status != GameStatus::InProgress {
-            Ok(MoveResult::GameOver(self.status))
+        let result = if self.status != GameStatus::InProgress {
+            MoveResult::GameOver(self.status)
         } else {
-            Ok(MoveResult::Continuing)
-        }
+            MoveResult::Continuing
+        };
+        let engine_threat =
+            self.status == GameStatus::InProgress && has_threat(&self.board, Player::O);
+        Ok(Turn {
+            result,
+            event: classify(self.status, engine_threat, user_threat, quality),
+        })
     }
 
     /// The current game status.
@@ -159,11 +219,6 @@ mod tests {
         assert_eq!(Game::default(), Game::new());
     }
 
-    #[test]
-    fn default_matches_new() {
-        assert_eq!(Game::default(), Game::new());
-    }
-
     /// After two make_move calls, history has 4 entries; entries 0 and 2 are
     /// the human's chosen positions (indices 1 and 3 are the engine's replies).
     #[test]
@@ -195,8 +250,14 @@ mod tests {
     #[test]
     fn invalid_position_rejected() {
         let mut game = Game::new();
-        assert_eq!(game.make_move(Position { row: 3, col: 0 }), Err(MoveError::InvalidPosition));
-        assert_eq!(game.make_move(Position { row: 0, col: 3 }), Err(MoveError::InvalidPosition));
+        assert_eq!(
+            game.make_move(Position { row: 3, col: 0 }),
+            Err(MoveError::InvalidPosition)
+        );
+        assert_eq!(
+            game.make_move(Position { row: 0, col: 3 }),
+            Err(MoveError::InvalidPosition)
+        );
         assert_eq!(game, Game::new());
     }
 
@@ -230,5 +291,20 @@ mod tests {
         assert_ne!(game.status(), GameStatus::InProgress);
         let err = game.make_move(Position { row: 0, col: 0 });
         assert_eq!(err, Err(MoveError::GameAlreadyOver));
+    }
+
+    #[test]
+    fn play_error_leaves_state_unchanged() {
+        let mut game = Game::new();
+        game.play(Position { row: 0, col: 0 }).expect("legal move");
+        let snapshot = game.clone();
+        let occupied = game.history()[0];
+        assert_eq!(game.play(occupied), Err(MoveError::CellOccupied));
+        assert_eq!(game, snapshot);
+        assert_eq!(
+            game.play(Position { row: 3, col: 0 }),
+            Err(MoveError::InvalidPosition)
+        );
+        assert_eq!(game, snapshot);
     }
 }

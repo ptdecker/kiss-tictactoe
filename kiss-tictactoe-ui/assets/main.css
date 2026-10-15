@@ -2,10 +2,6 @@
     box-sizing: border-box;
 }
 
-body {
-    margin: 0;
-}
-
 /* ============================================================
    Design tokens — all values defined here; no magic numbers
    outside this block
@@ -41,12 +37,35 @@ body {
 
   /* Border radius */
   --radius-pill: 9999px;
+
+  /* Color — Phase 3 */
+  --color-bubble-bg: #FFFFFF;
+  --color-bubble-border: #1E293B;
+  --color-button-primary-bg: #1E293B;
+  --color-button-primary-text: #F9FAFB;
+  --color-button-secondary-border: #94A3B8;
+  --color-button-secondary-text: #475569;
+  --color-score-label: #475569;
+
+  /* Layout — Phase 3 */
+  --bubble-min-height: 80px;
+  --bubble-tail-size: 8px;
+  --bubble-border-width: 2px;
+  --radius-bubble: 16px;
+  --button-min-height: 44px;
+  --button-border-width: 1px;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Motion — Phase 3 */
+  --bubble-fade-duration: 5s;
 }
 
 /* ============================================================
    Global layout
    ============================================================ */
 body {
+    margin: 0;
     font-family: system-ui, -apple-system, sans-serif;
     background-color: var(--color-bg);
     color: var(--color-text);
@@ -187,4 +206,181 @@ body {
 
 .play-again-btn:hover {
     background-color: var(--color-overlay-text);
+}
+
+/* White ring: the button sits on the dark overlay, where the blue ring is faint */
+.play-again-btn:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-overlay-text);
+    outline-offset: var(--focus-ring-offset);
+}
+
+/* ============================================================
+   Speech bubble — engine trash talk between title and board
+   ============================================================ */
+.speech-bubble-region {
+    width: 100%;
+    min-height: var(--bubble-min-height);
+}
+
+.speech-bubble {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: var(--bubble-min-height);
+    padding: var(--space-md);
+    background-color: var(--color-bubble-bg);
+    border: var(--bubble-border-width) solid var(--color-bubble-border);
+    border-radius: var(--radius-bubble);
+    color: var(--color-text);
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Down-pointing tail: border-colored triangle with a bg-colored inset copy */
+.speech-bubble::before,
+.speech-bubble::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: var(--bubble-tail-size) solid transparent;
+    border-right: var(--bubble-tail-size) solid transparent;
+}
+
+.speech-bubble::before {
+    border-top: var(--bubble-tail-size) solid var(--color-bubble-border);
+}
+
+.speech-bubble::after {
+    top: calc(100% - var(--bubble-border-width));
+    border-top: var(--bubble-tail-size) solid var(--color-bubble-bg);
+}
+
+.speech-bubble-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+@keyframes bubble-fade {
+    0%, 80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.speech-bubble--fading {
+    animation: bubble-fade var(--bubble-fade-duration) linear forwards;
+}
+
+.speech-bubble--final {
+    animation: none;
+    opacity: 1;
+}
+
+/* Keep the message visible for users who ask for less motion; the next
+   event replaces it anyway. */
+@media (prefers-reduced-motion: reduce) {
+    .speech-bubble--fading {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+.speech-bubble--empty {
+    visibility: hidden;
+}
+
+/* ============================================================
+   Scoreboard — Wins / Draws / Losses, player perspective (D-17)
+   ============================================================ */
+.scoreboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    gap: var(--space-md);
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 0;
+    gap: var(--space-xs);
+}
+
+.score-count {
+    font-size: var(--font-size-heading);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-text);
+}
+
+.score-label {
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-score-label);
+}
+
+/* ============================================================
+   Controls — New Game and Reset Scores
+   ============================================================ */
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: 100%;
+}
+
+.btn {
+    font-family: inherit;
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    line-height: 1.5;
+    min-height: var(--button-min-height);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    flex: 1 1 0;
+    white-space: nowrap;
+}
+
+.btn--primary {
+    background: var(--color-button-primary-bg);
+    color: var(--color-button-primary-text);
+    border: var(--button-border-width) solid var(--color-button-primary-bg);
+}
+
+.btn--secondary {
+    background: transparent;
+    color: var(--color-button-secondary-text);
+    border: var(--button-border-width) solid var(--color-button-secondary-border);
+}
+
+.btn--primary:hover {
+    opacity: 0.9;
+}
+
+.btn--secondary:hover {
+    border-color: var(--color-text);
+    color: var(--color-text);
+}
+
+.btn:active {
+    opacity: 0.8;
+}
+
+.btn:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-x);
+    outline-offset: var(--focus-ring-offset);
 }

@@ -3,7 +3,7 @@
 use crate::types::{Board, GameStatus};
 
 /// All eight winning lines (3 rows, 3 columns, 2 diagonals).
-const WINNING_LINES: [[(usize, usize); 3]; 8] = [
+pub(crate) const WINNING_LINES: [[(usize, usize); 3]; 8] = [
     // Rows
     [(0, 0), (0, 1), (0, 2)],
     [(1, 0), (1, 1), (1, 2)],
@@ -36,7 +36,9 @@ pub fn detect_status(board: &Board) -> GameStatus {
         }
     }
 
-    let full = board.iter().all(|row| row.iter().all(|cell| cell.is_some()));
+    let full = board
+        .iter()
+        .all(|row| row.iter().all(|cell| cell.is_some()));
     if full {
         GameStatus::Draw
     } else {

@@ -49,7 +49,10 @@ mod tests {
 
     #[test]
     fn outcome_text_engine_win() {
-        assert_eq!(outcome_text(GameStatus::Win(Player::O)), Some("Engine wins!"));
+        assert_eq!(
+            outcome_text(GameStatus::Win(Player::O)),
+            Some("Engine wins!")
+        );
     }
 
     #[test]
