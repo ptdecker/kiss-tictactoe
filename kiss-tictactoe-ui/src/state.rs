@@ -34,7 +34,7 @@ impl Tally {
         *self = Self::default();
     }
 
-    /// Labelled counts in display order, left to right (D-17).
+    /// Labeled counts in display order, left to right (D-17).
     pub fn score_items(self) -> [(&'static str, u32); 3] {
         [
             ("Wins", self.wins),

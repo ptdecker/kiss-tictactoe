@@ -7,3 +7,6 @@ dist/
 
 # GSD planning artifacts are kept local only
 .planning/
+
+# mdBook output
+docs/*/book/

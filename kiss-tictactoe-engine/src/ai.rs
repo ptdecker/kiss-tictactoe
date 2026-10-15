@@ -260,7 +260,7 @@ mod tests {
         best
     }
 
-    /// Perfect X play (maximises minimax score) vs. optimal engine always draws.
+    /// Perfect X play (maximizes minimax score) vs. optimal engine always draws.
     #[test]
     fn perfect_play_draws() {
         let mut game = Game::new();

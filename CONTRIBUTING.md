@@ -1,10 +1,14 @@
 # Contributing to kiss-tictactoe
 
-Thank you for your interest in contributing! This is a demonstration project showcasing idiomatic Rust architecture, so contributions that stay within the Keep It Simple Stupid principle are most welcome.
+Thank you for your interest in contributing!
+
+This is a demonstration project showcasing idiomatic Rust architecture, so contributions that stay
+within the Keep It Simple Stupid principle are most welcome.
 
 ## How to Report Bugs
 
-Please open a [GitHub Issue](https://github.com/ptdecker/kiss-tictactoe/issues) using the **Bug Report** template. Include:
+Please open a [GitHub Issue](https://github.com/ptdecker/kiss-tictactoe/issues) using the
+**Bug Report** template. Include:
 
 - **Operating system** and version
 - **Rust version** (`rustc --version`)
@@ -16,7 +20,8 @@ The more detail you provide, the faster we can diagnose and fix the issue.
 
 ## How to Submit a Pull Request
 
-1. Fork the repository and create a branch from the relevant phase branch (e.g., `gsd/phase-02-*`) or `main`.
+1. Fork the repository and create a branch from the relevant phase branch (e.g., `gsd/phase-02-*`)
+   or `main`.
 2. Make your changes, following the Code Style guidelines below.
 3. Open a pull request against the appropriate branch and describe what your change does and why.
 4. PRs that add features should reference a GitHub Issue.
@@ -30,7 +35,21 @@ cargo fmt
 cargo clippy --all-targets -- -D warnings
 ```
 
-Both commands must produce zero warnings and zero errors. PRs with clippy warnings will be asked to fix them before merge.
+Both commands must produce zero warnings and zero errors. PRs with clippy warnings will be asked to
+fix them before merge.
+
+## Documentation
+
+The two mdBooks live in `docs/user-guide` and `docs/engine`. They require mdbook 0.5.4:
+
+```sh
+cargo install mdbook --version 0.5.4 --locked
+```
+
+Markdown is linted with [rumdl](https://rumdl.dev) (install with
+`cargo install rumdl --version 0.2.79 --locked`). Lines wrap at 100 columns; run `rumdl fmt .` to
+reflow and fix. Before submitting documentation changes, run `scripts/check-docs.sh`; it must print
+`docs OK`. Books are built locally; there is no publishing step.
 
 ## Scope Note
 

@@ -1,0 +1,11 @@
+[book]
+title = "kiss-tictactoe Engine Manual"
+authors = ["P. Todd Decker"]
+language = "en"
+src = "src"
+
+[output.html]
+git-repository-url = "https://github.com/ptdecker/kiss-tictactoe"
+
+[rust]
+edition = "2024"
