@@ -61,6 +61,15 @@ kiss-tictactoe is a focused demonstration project. PRs are most likely to be acc
 
 Large feature additions or architectural changes are better discussed in a GitHub Issue first.
 
+## Looking for something to work on?
+
+Planned enhancements are tracked as GitHub issues in the
+[v1.1 candidates](https://github.com/ptdecker/kiss-tictactoe/milestone/1) milestone. Issues labeled
+[`good first issue`](https://github.com/ptdecker/kiss-tictactoe/issues?q=is%3Aopen+label%3A%22good+first+issue%22)
+are the best place to start, and
+[`help wanted`](https://github.com/ptdecker/kiss-tictactoe/issues?q=is%3Aopen+label%3A%22help+wanted%22)
+marks the rest. Comment on an issue to claim it before you start, then open a pull request.
+
 ## Dependency advisories
 
 Two Dependabot alerts were dismissed because the fix cannot be applied within the pinned Dioxus
