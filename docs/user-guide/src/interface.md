@@ -6,7 +6,8 @@ The window is titled kiss-tictactoe. From top to bottom it shows:
 2. **Speech bubble:** where the engine talks to you. See [The engine's personality](personality.md).
 3. **Board:** the 3x3 grid you click to play.
 4. **Scoreboard:** three counts from your point of view: Wins, Draws and Losses.
-5. **Controls:** the New Game button and the quieter Reset Scores button. See [Controls](controls.md).
+5. **Controls:** the New Game button and the quieter Reset Scores button. See
+   [Controls](controls.md).
 
 ![The board mid-game, with the scoreboard and controls below](images/board.png)
 

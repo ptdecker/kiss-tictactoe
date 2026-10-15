@@ -1,7 +1,7 @@
 # Writing a new front end
 
-The engine is a plain library, so any interface can drive it. This chapter lists ownership and
-walks through a complete command-line front end.
+The engine is a plain library, so any interface can drive it. This chapter lists ownership and walks
+through a complete command-line front end.
 
 ## The contract
 
@@ -129,5 +129,5 @@ board, game over) is shown through its `Display` message.
 - A test harness can use a fixed seed for deterministic lines.
 - `Turn` derives `PartialEq`, so a whole turn is easy to assert on.
 
-See [The Game API](game-api.md) for the calls used here and [The event system](events.md) for what each
-event means.
+See [The Game API](game-api.md) for the calls used here and [The event system](events.md) for what
+each event means.

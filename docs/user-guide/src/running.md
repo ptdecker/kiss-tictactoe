@@ -32,7 +32,8 @@ dx serve
 A window titled kiss-tictactoe opens with the game. To stop, press Ctrl-C in the terminal or close
 the window.
 
-If `dx` fails with `sccache: Compiler not supported`, the fix is in [Troubleshooting](troubleshooting.md).
+If `dx` fails with `sccache: Compiler not supported`, the fix is in
+[Troubleshooting](troubleshooting.md).
 
 ## Other platforms
 

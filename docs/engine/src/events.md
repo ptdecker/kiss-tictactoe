@@ -1,7 +1,7 @@
 # The event system
 
-`Game::play` returns a [`Turn`](../../../target/doc/kiss_tictactoe_engine/struct.Turn.html) 
-whose `event` names at most one trash-talk category, a
+`Game::play` returns a [`Turn`](../../../target/doc/kiss_tictactoe_engine/struct.Turn.html) whose
+`event` names at most one trash-talk category, a
 [`TalkEvent`](../../../target/doc/kiss_tictactoe_engine/enum.TalkEvent.html). The engine decides the
 category; the front end turns it into words with a `Commentator`.
 

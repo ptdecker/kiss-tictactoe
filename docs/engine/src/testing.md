@@ -5,17 +5,17 @@ The project tests the engine in layers and checks the documentation too.
 ## The layers
 
 - **Unit tests and rstest tables.** Win detection, event selection and the commentary banks are
-  covered with `rstest` parameterised cases that list known boards (forced wins, draws, blocks).
+  covered with `rstest` parameterized cases that list known boards (forced wins, draws, blocks).
 - **proptest invariants.** Property tests generate arbitrary boards and move sequences to check
-  things like legal engine moves and win-detection correctness, where the input space is too 
-  large to list.
+  things like legal engine moves and win-detection correctness, where the input space is too large
+  to list.
 - **The exhaustive never-loses proof.** `engine_never_loses_exhaustive` in `ai.rs` plays every
   possible human move sequence. See [Minimax and the correctness proof](minimax.md).
 - **End-to-end scenarios.** `tests/gameplay.rs` source drives whole games through the public API.
 - **Rustdoc doctests.** Examples in the crate's doc comments are compiled and run by `cargo test`.
 - **This manual's samples.** Every Rust sample in the manual is compiled and run by `mdbook test`,
-  so the manual fails to build when the API drifts. The one exception that is only compiled is 
-  the stdin sketch in [Writing a new front end](new-front-end.md).
+  so the manual fails to build when the API drifts. The one exception that is only compiled is the
+  stdin sketch in [Writing a new front end](new-front-end.md).
 
 ## Running them
 
@@ -43,10 +43,10 @@ It prints `docs OK` on success.
 `mdbook test` compiles each sample with `rustdoc`, which needs a compiled copy of the engine to link
 against. Building into a dedicated target directory gives it exactly one copy of the library, so
 rustdoc never sees conflicting versions. Because samples are linked with `-L` rather than through
-Cargo, each carries a hidden `# extern crate kiss_tictactoe_engine;` line that brings the crate into
-scope.
+Cargo, each sample has a visible `extern crate kiss_tictactoe_engine;` line that brings the crate
+into scope, and a visible `fn main() { ... }` wrapper, so the samples are valid Rust in any editor.
 
 ## sccache
 
-On machines with a global sccache `rustc-wrapper`, `dx` needs `RUSTC_WRAPPER=""` (see the user 
-guide's Troubleshooting chapter). `cargo` and the documentation script work as they are.
+On machines with a global sccache `rustc-wrapper`, `dx` needs `RUSTC_WRAPPER=""` (see the user
+guide's Troubleshooting chapter). The `cargo` tool and the documentation script work as they are.

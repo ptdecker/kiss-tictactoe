@@ -46,8 +46,10 @@ The two mdBooks live in `docs/user-guide` and `docs/engine`. They require mdbook
 cargo install mdbook --version 0.5.4 --locked
 ```
 
-Before submitting documentation changes, run `scripts/check-docs.sh`; it must print `docs OK`. 
-Books are built locally; there is no publishing step.
+Markdown is linted with [rumdl](https://rumdl.dev) (install with
+`cargo install rumdl --version 0.2.79 --locked`). Lines wrap at 100 columns; run `rumdl fmt .` to
+reflow and fix. Before submitting documentation changes, run `scripts/check-docs.sh`; it must print
+`docs OK`. Books are built locally; there is no publishing step.
 
 ## Scope Note
 

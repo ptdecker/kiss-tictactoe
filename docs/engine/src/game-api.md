@@ -5,7 +5,8 @@
 ## Lifecycle
 
 `Game::new()` starts a fresh game with `X` (the human) to move. Each successful call places your `X`
-and then the engine's `O` reply, both inside the same call, until a move ends the game with `MoveResult::GameOver`.
+and then the engine's `O` reply, both inside the same call, until a move ends the game with
+`MoveResult::GameOver`.
 
 There are two ways to move:
 

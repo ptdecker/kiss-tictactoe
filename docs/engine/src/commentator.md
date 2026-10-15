@@ -8,16 +8,16 @@ A test harness can pass any constant.
 
 ## From seed to state
 
-`Commentator::new(seed)` scrambles the seed with splitmix64, so seeds that differ only in their 
-low bits (two clock readings a few nanoseconds apart) still give unrelated sequences. If the
-scrambled value is zero, it is replaced with a nonzero constant, because zero is a fixed point of
-the generator. The result is the state of a xorshift64 generator, a tiny shift-and-xor pseudo random
+`Commentator::new(seed)` scrambles the seed with splitmix64, so seeds that differ only in their low
+bits (two clock readings a few nanoseconds apart) still give unrelated sequences. If the scrambled
+value is zero, it is replaced with a nonzero constant, because zero is a fixed point of the
+generator. The result is the state of a xorshift64 generator, a tiny shift-and-xor pseudo random
 generator that needs no external crate.
 
 ## Choosing a line
 
-Each event category has its own bank of four to eight lines, and a test keeps every bank in that 
-range. Function `line(event)` draws a random index into the bank. If that category produced a line 
+Each event category has its own bank of four to eight lines, and a test keeps every bank in that
+range. Function `line(event)` draws a random index into the bank. If that category produced a line
 before, the previous pick is excluded, so the same line never appears twice in a row within a
 category. Different categories track their last pick independently.
 

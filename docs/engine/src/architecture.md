@@ -42,4 +42,5 @@ Anything that depends on the outside world is the front end's job:
 - the session score
 - speech-bubble timing and fading
 
-Start with [Data types](types.md), then [The Game API](game-api.md), then [The event system](events.md).
+Start with [Data types](types.md), then [The Game API](game-api.md), then
+[The event system](events.md).

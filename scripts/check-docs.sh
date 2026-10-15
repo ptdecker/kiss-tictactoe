@@ -12,10 +12,17 @@ LOG=$(mktemp)
 trap 'rm -f "$LOG"' EXIT
 
 echo "==> checking mdbook version"
-if ! command -v mdbook >/dev/null 2>&1 || ! mdbook --version | grep -q '0\.5\.4'; then
+if ! command -v mdbook >/dev/null 2>&1 || ! mdbook --version | grep -qE '(^|[^0-9.])0\.5\.4($|[^0-9.])'; then
   echo "mdbook 0.5.4 required: cargo install mdbook --version 0.5.4 --locked" >&2
   exit 1
 fi
+
+echo "==> markdown lint (rumdl)"
+if ! command -v rumdl >/dev/null 2>&1; then
+  echo "rumdl required: cargo install rumdl --version 0.2.79 --locked" >&2
+  exit 1
+fi
+rumdl check .
 
 echo "==> checking books exist"
 for book in "${BOOKS[@]}"; do

@@ -27,9 +27,8 @@ Two tests in the engine's `ai.rs` back this up, and both run in `cargo test`:
 
 - `engine_never_loses_exhaustive` explores every sequence of X moves. For each empty cell it clones
   the game, plays that cell through `make_move` (the engine replies automatically), asserts the
-  status is never a win for X, and recurses while the game is in progress. It also asserts that 
-  some terminal games were reached and that at least one was a draw, so the check cannot pass
-  vacuously.
+  status is never a win for X, and recurses while the game is in progress. It also asserts that some
+  terminal games were reached and that at least one was a draw, so the check cannot pass vacuously.
 - `perfect_play_draws` plays X perfectly, choosing each move by searching X's best outcome against
   the engine, and asserts the game ends in a draw.
 

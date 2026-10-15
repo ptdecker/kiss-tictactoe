@@ -1,0 +1,16 @@
+# Markdown lint/format config. Run `rumdl check .` to lint and `rumdl fmt .` to reflow and fix.
+[global]
+disable = ["MD041"]
+exclude = [".planning", ".claude", "target", "docs/*/book", "CLAUDE.md", "CODE_OF_CONDUCT.md"]
+
+[MD013]
+line-length = 100
+code-blocks = false
+tables = false
+headings = false
+reflow = true
+reflow-mode = "normalize"
+
+[MD060]
+enabled = true
+style = "aligned"

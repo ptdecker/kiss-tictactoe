@@ -3,10 +3,10 @@
 A Rust tic-tac-toe demonstration project showcasing clean library/UI separation.
 
 The game engine lives in a platform-agnostic library crate (`kiss-tictactoe-engine`) with a clean
-public API. A [Dioxus 0.7](https://dioxuslabs.com/) desktop app (`kiss-tictactoe-ui`) provides the interface. Always
-user vs. engine — no multiplayer, no networking.
+public API. A [Dioxus 0.7](https://dioxuslabs.com/) desktop app (`kiss-tictactoe-ui`) provides the
+interface. Always user vs. engine — no multiplayer, no networking.
 
-**Core value:** A fully playable, good-looking tic-tac-toe game where the engine trash talks you — 
+**Core value:** A fully playable, good-looking tic-tac-toe game where the engine trash talks you —
 demonstrating idiomatic Rust architecture.
 
 ## Features
@@ -19,7 +19,7 @@ demonstrating idiomatic Rust architecture.
 
 ## Architecture
 
-```
+```text
 kiss-tictactoe/
 ├── kiss-tictactoe-engine/   # Platform-agnostic game logic (no UI deps)
 │   ├── src/
@@ -120,7 +120,8 @@ author. Planning and execution were organized with the
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Please read the [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Please read the [Code of Conduct](CODE_OF_CONDUCT.md) before
+contributing.
 
 ## License
 
